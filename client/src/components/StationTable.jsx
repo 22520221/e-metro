@@ -1,7 +1,16 @@
 function StationTable({
     stations,
     handleEdit,
+
     handleDelete,
+
+    handleNextPage,
+
+    handlePreviousPage,
+
+    currentPage,
+
+    totalPages
 }) {
     return (
         <div>
@@ -70,6 +79,26 @@ function StationTable({
                 </tbody>
 
             </table>
+            <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+            >
+                Previous
+            </button>
+
+            <span>
+
+                Trang {currentPage} / {totalPages}
+
+            </span>
+
+            <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+            >
+                Next
+            </button>
+
         </div>
     );
 }

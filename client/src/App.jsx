@@ -12,6 +12,10 @@ import {
 
 function App() {
 
+// ==========================
+// 1. State
+// ==========================
+
     const [stations, setStations] = useState([]);
 
     const [stationName, setStationName] = useState("");
@@ -22,15 +26,30 @@ function App() {
 
     const [searchTerm, setSearchTerm] = useState("");
 
+    const [sortOrder, setSortOrder] = useState("asc");
+
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const itemsPerPage = 5;
+
+
     const [isLoading, setIsLoading] = useState(false);
 
     const [error, setError] = useState("");
+
+// =========================
+// // 2. useEffect
+// ==========================
 
     useEffect(() => {
 
         loadStations();
 
     }, []);
+
+// ==========================
+// 3. CRUD Functions
+// ==========================
 
     async function loadStations() {
 
@@ -161,11 +180,68 @@ function App() {
 
     }
 
-        const filteredStations = stations.filter((station) =>
+// ==========================
+// 4. Pagination Functions
+// ==========================
+
+    function handleNextPage() {
+
+        if (currentPage < totalPages) {
+
+            setCurrentPage(currentPage + 1);
+
+        }
+
+    }
+
+    function handlePreviousPage() {
+
+        if (currentPage > 1) {
+
+            setCurrentPage(currentPage - 1);
+
+        }
+
+    }
+
+// ==========================
+// 5. Xử lý dữ liệu
+// ==========================
+
+        const filteredStations = stations
+    .filter((station) =>
         station.StationName
             .toLowerCase()
             .includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+
+        if (sortOrder === "asc") {
+
+            return a.StationName.localeCompare(
+                b.StationName
+            );
+
+        }
+
+        return b.StationName.localeCompare(
+            a.StationName
+        );
+
+    });
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+
+    const endIndex = startIndex + itemsPerPage;
+
+    const currentStations = filteredStations.slice(
+        startIndex,
+        endIndex
     );
+
+ // ==========================
+// 6. return
+// ==========================
 
     return (
         <div>
@@ -190,6 +266,9 @@ function App() {
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
 
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+
                 editingId={editingId}
 
                 handleAddStation={handleAddStation}
@@ -202,8 +281,13 @@ function App() {
                 stations={filteredStations}
 
                 handleEdit={handleEdit}
-
                 handleDelete={handleDelete}
+
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+
+                currentPage={currentPage}
+                totalPages={totalPages}
             />
 
         </div>

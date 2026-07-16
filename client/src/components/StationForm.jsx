@@ -1,13 +1,21 @@
 function StationForm({
     stationName,
     setStationName,
+
     address,
     setAddress,
+
     searchTerm,
     setSearchTerm,
+
+    sortOrder,
+    setSortOrder,
+
     editingId,
+
     handleAddStation,
     handleUpdateStation,
+
     isLoading,
 }) {
     return (
@@ -64,6 +72,24 @@ function StationForm({
             <br />
             <br />
 
+            <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+            >
+                <option value="asc">
+                    A → Z
+                </option>
+
+                <option value="desc">
+                    Z → A
+                </option>
+            </select>
+
+            <br />
+            <br />
+
+            <br />
+            <br />
         </div>
     );
 }
