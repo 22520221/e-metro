@@ -6,10 +6,11 @@ function StationForm({
     setAddress,
 
     searchTerm,
-    setSearchTerm,
+    handleSearchChange,
 
     sortOrder,
-    setSortOrder,
+    handleSortChange,
+
 
     editingId,
 
@@ -66,7 +67,11 @@ function StationForm({
                 type="text"
                 placeholder="Tìm kiếm ga..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e)=>
+
+                handleSearchChange(e.target.value)
+
+                }
             />
 
             <br />
@@ -74,7 +79,11 @@ function StationForm({
 
             <select
                 value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
+                onChange={(e)=>
+
+                handleSortChange(e.target.value)
+
+                }
             >
                 <option value="asc">
                     A → Z

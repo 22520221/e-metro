@@ -32,7 +32,6 @@ function App() {
 
     const itemsPerPage = 5;
 
-
     const [isLoading, setIsLoading] = useState(false);
 
     const [error, setError] = useState("");
@@ -204,6 +203,22 @@ function App() {
 
     }
 
+    function handleSearchChange(value) {
+
+    setSearchTerm(value);
+
+    setCurrentPage(1);
+
+}
+
+function handleSortChange(value) {
+
+    setSortOrder(value);
+
+    setCurrentPage(1);
+
+}
+
 // ==========================
 // 5. Xử lý dữ liệu
 // ==========================
@@ -239,6 +254,12 @@ function App() {
         endIndex
     );
 
+    const totalPages =
+    Math.ceil(
+        filteredStations.length /
+        itemsPerPage
+    );
+
  // ==========================
 // 6. return
 // ==========================
@@ -264,10 +285,12 @@ function App() {
                 setAddress={setAddress}
 
                 searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
 
                 sortOrder={sortOrder}
-                setSortOrder={setSortOrder}
+
+                handleSearchChange={handleSearchChange}
+
+                handleSortChange={handleSortChange}
 
                 editingId={editingId}
 
@@ -278,7 +301,10 @@ function App() {
             />
 
             <StationTable
-                stations={filteredStations}
+                stations={currentStations}
+                currentPage={currentPage}
+
+                totalPages={totalPages}
 
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
