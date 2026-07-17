@@ -304,7 +304,7 @@ function handleSortChange(value) {
                 stations={currentStations}
                 currentPage={currentPage}
 
-                totalPages={totalPages}
+                totalPages={totalPages} 
 
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
