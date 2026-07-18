@@ -1,3 +1,5 @@
+const { sql, config } = require("../config/db");
+
 async function getAllTrains() {
 
     const pool = await sql.connect(config);
@@ -9,3 +11,9 @@ async function getAllTrains() {
     return result.recordset;
 
 }
+
+module.exports = {
+
+    getAllTrains
+
+};
