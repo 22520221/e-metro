@@ -7,5 +7,7 @@ const trainController =
 
 router.get("/", trainController.getTrains);
 
+router.post("/", trainController.addTrain);
+
 
 module.exports = router;
