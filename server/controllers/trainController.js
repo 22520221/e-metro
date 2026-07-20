@@ -36,9 +36,90 @@ async function addTrain(req, res) {
     }
 }
 
+async function updateTrain(req, res) {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+            trainName,
+            capacity,
+            company,
+            status
+        } = req.body;
+
+        if (!trainName || !capacity || !company || !status) {
+
+            return res.status(400).json({
+                message: "Vui lòng nhập đầy đủ thông tin."
+            });
+
+        }
+
+        await trainService.updateTrain(
+
+            id,
+
+            trainName,
+
+            capacity,
+
+            company,
+
+            status
+
+        );
+
+        return res.json({
+
+            message: "Cập nhật tàu thành công!"
+
+        });
+
+    } catch (err) {
+
+        return res.status(500).json({
+
+            message: err.message
+
+        });
+
+    }
+
+}
+
+async function deleteTrain(req, res) {
+
+    try {
+
+        const { id } = req.params;
+
+        await trainService.deleteTrain(id);
+
+        return res.json({
+
+            message: "Xóa tàu thành công!"
+
+        });
+
+    } catch (err) {
+
+        return res.status(500).json({
+
+            message: err.message
+
+        });
+
+    }
+
+}
+
 module.exports = {
 
     getTrains,
-    addTrain
+    addTrain,
+    updateTrain,
+    deleteTrain
 
 };

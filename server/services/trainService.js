@@ -56,9 +56,77 @@ async function addTrain(
 
 }
 
+async function updateTrain(
+
+    id,
+
+    trainName,
+
+    capacity,
+
+    company,
+
+    status
+
+) {
+
+    const pool = await sql.connect(config);
+
+    await pool.request()
+
+        .input("id", sql.Int, id)
+
+        .input("trainName", sql.NVarChar, trainName)
+
+        .input("capacity", sql.Int, capacity)
+
+        .input("company", sql.NVarChar, company)
+
+        .input("status", sql.NVarChar, status)
+
+        .query(`
+
+            UPDATE Train
+
+            SET
+
+                TrainName = @trainName,
+
+                Capacity = @capacity,
+
+                Company = @company,
+
+                Status = @status
+
+            WHERE TrainID = @id
+
+        `);
+
+}
+
+async function deleteTrain(id) {
+
+    const pool = await sql.connect(config);
+
+    await pool.request()
+
+        .input("id", sql.Int, id)
+
+        .query(`
+
+            DELETE FROM Train
+
+            WHERE TrainID = @id
+
+        `);
+
+}
+
 module.exports = {
 
     getAllTrains,
-    addTrain
+    addTrain,
+    updateTrain,
+    deleteTrain
 
 };
