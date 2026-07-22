@@ -122,6 +122,89 @@ async function deleteTrain(id) {
 
 }
 
+async function getTrains() {
+
+    const response = await fetch(
+        "http://localhost:3000/api/trains"
+    );
+
+    const data = await response.json();
+
+    return data;
+}
+
+    async function addTrain(
+    trainName,
+    capacity,
+    company,
+    status
+) {
+    const response = await fetch(
+        "http://localhost:3000/api/trains",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                trainName,
+                capacity,
+                company,
+                status
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    return data;
+}
+
+async function updateTrain(
+    id,
+    trainName,
+    capacity,
+    company,
+    status
+) {
+    const response = await fetch(
+        `http://localhost:3000/api/trains/${id}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                trainName,
+                capacity,
+                company,
+                status
+            })
+        }
+    );
+
+    const data = await response.json();
+
+    return data;
+}
+
+async function deleteTrain(id) {
+
+    const response = await fetch(
+        `http://localhost:3000/api/trains/${id}`,
+        {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+    );
+
+    const data = await response.json();
+
+    return data;
+}
+
 module.exports = {
 
     getAllTrains,
