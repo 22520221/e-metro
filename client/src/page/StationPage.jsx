@@ -303,7 +303,7 @@ function handleSortChange(value) {
                 stations={currentStations}
 
                 handleEdit={handleEdit}
-                handleDelete={handleDelete}
+                handleDelete={handleDeleteStation}
 
                 handleNextPage={handleNextPage}
                 handlePreviousPage={handlePreviousPage}

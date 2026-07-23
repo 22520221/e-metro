@@ -1,0 +1,21 @@
+nav {
+
+    display: flex;
+
+    gap: 20px;
+
+    background-color: #1976d2;
+
+    padding: 15px;
+
+    color: white;
+
+}
+
+nav a {
+
+    color: white;
+
+    text-decoration: none;
+
+}
