@@ -5,9 +5,9 @@ function Navbar() {
 
     return (
 
-        <nav>
+        <nav className="navbar">
 
-            <Link to="/">
+            <Link to="/" end>
                 Home
             </Link>
 
@@ -17,6 +17,10 @@ function Navbar() {
 
             <Link to="/trains">
                 Trains
+            </Link>
+
+            <Link to="/lines">
+                Lines
             </Link>
 
         </nav>

@@ -5,15 +5,17 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from "./page/HomePage";
 import StationPage from "./page/StationPage";
 import TrainPage from "./page/TrainPage";
+import LinePage from "./page/LinePage";
+import NotFoundPage from "./page/NotFoundPage";
 
-import Navbar from "./components/Navbar";
+import Layout from "./layouts/Layout";
 
 function App() {
     return (
-        <>
-            <Navbar />
+        <Routes>
 
-            <Routes>
+            <Route element={<Layout />}>
+
                 <Route
                     path="/"
                     element={<HomePage />}
@@ -28,8 +30,20 @@ function App() {
                     path="/trains"
                     element={<TrainPage />}
                 />
-            </Routes>
-        </>
+
+                <Route
+                    path="/lines"
+                    element={<LinePage />}    
+                />
+
+                <Route
+                    path="*"
+                    element={<NotFoundPage />}
+                />
+
+            </Route>
+
+        </Routes>
     );
 }
 

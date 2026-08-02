@@ -1,21 +1,13 @@
-nav {
-
+.navbar {
+    background-color: aqua;
     display: flex;
-
     gap: 20px;
-
-    background-color: #1976d2;
-
     padding: 15px;
-
-    color: white;
-
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
 }
 
-nav a {
-
+.navbar a {
     color: white;
-
-    text-decoration: none;
-
 }

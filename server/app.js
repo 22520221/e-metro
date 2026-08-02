@@ -3,6 +3,7 @@ const cors = require("cors");
 
 const stationRoutes = require("./routes/stationRoutes");
 const trainRoutes = require("./routes/trainRoutes");
+const lineRoutes = require("./routes/lineRoutes");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use("/api/stations", stationRoutes);
 app.use("/api/trains", trainRoutes);
+app.use("/api/lines", lineRoutes);
 
 app.get("/", (req, res) => {
     res.json({
