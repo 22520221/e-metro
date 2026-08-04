@@ -10,7 +10,7 @@ async function getStations() {
     return await response.json();
 }
 
-async function addStation(stationName, address) {
+async function addStation(stationName, address, lineId) {
     const response = await fetch(API_URL, {
         method: "POST",
         headers: {
@@ -19,6 +19,7 @@ async function addStation(stationName, address) {
         body: JSON.stringify({
             stationName,
             address,
+            lineId
         }),
     });
 
@@ -39,6 +40,7 @@ async function updateStation(id, stationName, address) {
         body: JSON.stringify({
             stationName,
             address,
+            lineId
         }),
     });
 

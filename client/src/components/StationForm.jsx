@@ -5,6 +5,10 @@ function StationForm({
     address,
     setAddress,
 
+    lines,
+    lineId,
+    setLineId,
+
     searchTerm,
     handleSearchChange,
 
@@ -42,6 +46,36 @@ function StationForm({
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
             />
+
+            <br />
+            <br />
+
+            <select
+                value={lineId}
+                onChange={(e) => setLineId(e.target.value)}
+            >
+
+            <option value="">
+                -- Chọn tuyến --
+            </option>
+
+            {
+                lines.map((line) => (
+
+                <option
+                    key={line.LineID}
+                    value={line.LineID}
+                >
+                    {line.LineName}
+                </option>
+
+                ))
+            }
+
+            </select>
+
+            <br />
+            <br />
 
             <br />
             <br />

@@ -19,11 +19,12 @@ async function getStations(req, res) {
 async function addStation(req, res) {
     try {
 
-        const { stationName, address } = req.body;
+        const { stationName, address, lineId } = req.body;
 
         await stationService.addStation(
             stationName,
-            address
+            address,
+            lineId
         );
 
         res.json({
@@ -44,12 +45,13 @@ async function updateStation(req, res) {
 
         const { id } = req.params;
 
-        const { stationName, address } = req.body;
+        const { stationName, address, lineId } = req.body;
 
         await stationService.updateStation(
             id,
             stationName,
-            address
+            address,
+            lineId
         );
 
         res.json({

@@ -1,4 +1,11 @@
-function LineTable({ lines }) {
+function LineTable({
+
+    lines,
+
+    handleEdit,
+    handleDeleteLine,
+
+}) {
 
     return (
 
@@ -6,17 +13,60 @@ function LineTable({ lines }) {
 
             <h3>Danh sách tuyến</h3>
 
-            {
-                lines.map((line) => (
-                    
-                    <div key={line.LineID}>
+            <table border="1" cellPadding="10">
 
-                        {line.LineName} - {line.LineColor}
+                <thead>
 
-                    </div>
+                    <tr>
 
-                ))
-            }
+                        <th>ID</th>
+                        <th>Tên tuyến</th>
+                        <th>Màu tuyến</th>
+                        <th>Hành động</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {
+                        lines.map((line) => (
+
+                            <tr key={line.LineID}>
+
+                                <td>{line.LineID}</td>
+
+                                <td>{line.LineName}</td>
+
+                                <td>{line.LineColor}</td>
+
+                                <td>
+
+                                    <button
+                                        onClick={() => handleEdit(line)}
+                                    >
+                                        Sửa
+                                    </button>
+
+                                    {" "}
+
+                                    <button
+                                        onClick={() => handleDeleteLine(line.LineID)}
+                                    >
+                                        Xóa
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        ))
+                    }
+
+                </tbody>
+
+            </table>
 
         </div>
 

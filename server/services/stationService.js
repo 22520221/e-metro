@@ -4,31 +4,39 @@ async function getAllStations() {
     await sql.connect(config);
 
     const result = await sql.query`
-        SELECT *
-        FROM Station
-        ORDER BY StationID
+        SELECT
+            s.StationID,
+            s.StationName,
+            s.Address,
+            s.LineID,
+            l.LineName
+        FROM Station s
+        INNER JOIN Line l
+            ON s.LineID = l.LineID
+        ORDER BY s.StationID
     `;
 
     return result.recordset;
 }
 
-async function addStation(stationName, address) {
+async function addStation(stationName, address, lineId) {
     await sql.connect(config);
 
     await sql.query`
-        INSERT INTO Station (StationName, Address)
-        VALUES (${stationName}, ${address})
+        INSERT INTO Station (StationName, Address, LineId)
+        VALUES (${stationName}, ${address}, ${lineId})
     `;
 }
 
-async function updateStation(id, stationName, address) {
+async function updateStation(id, stationName, address, lineId) {
     await sql.connect(config);
 
     await sql.query`
         UPDATE Station
         SET
             StationName = ${stationName},
-            Address = ${address}
+            Address = ${address},
+            LineID = ${lineId}
         WHERE StationID = ${id}
     `;
 }

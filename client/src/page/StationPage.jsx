@@ -10,6 +10,8 @@ import {
     deleteStation
 } from "../services/stationService";
 
+import { getLines } from "../services/lineService";
+
 
 function Stationpage(){
 // ==========================
@@ -19,11 +21,19 @@ function Stationpage(){
 const [stations, setStations] = useState([]);
 const [stationName, setStationName] = useState("");
 const [address, setAddress] = useState("");
+
+const [lines, setLines] = useState([]);
+const [lineId, setLineId] = useState("");
+
 const [editingId, setEditingId] = useState(null);
+
 const [searchTerm, setSearchTerm] = useState("");
+
 const [sortOrder, setSortOrder] = useState("asc");
+
 const [currentPage, setCurrentPage] = useState(1);
 const itemsPerPage = 5;
+
 const [isLoading, setIsLoading] = useState(false);
 const [error, setError] = useState("");
 
@@ -34,6 +44,8 @@ const [error, setError] = useState("");
     useEffect(() => {
 
         loadStations();
+
+        loadLines();
 
     }, []);
 
@@ -58,6 +70,22 @@ const [error, setError] = useState("");
 
     }
 
+    async function loadLines() {
+
+    try {
+
+        const data = await getLines();
+
+        setLines(data);
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
+
+}
+
     async function handleAddStation() {
 
         if (!stationName || !address) {
@@ -72,7 +100,8 @@ const [error, setError] = useState("");
 
             const result = await addStation(
                 stationName,
-                address
+                address,
+                lineId
             );
 
             alert(result.message);
@@ -282,6 +311,10 @@ function handleSortChange(value) {
 
                 address={address}
                 setAddress={setAddress}
+
+                lines={lines}
+                lineId={lineId}
+                setLineId={setLineId}
 
                 searchTerm={searchTerm}
 

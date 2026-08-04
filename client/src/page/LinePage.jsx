@@ -224,6 +224,8 @@ return (
 
                 currentPage={currentPage}
                 
+                handleEdit={handleEdit}
+
                 handleDeleteLine={handleDeleteLine}
             />
 

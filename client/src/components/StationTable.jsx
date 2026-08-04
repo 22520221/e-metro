@@ -20,6 +20,7 @@ function StationTable({
                         <th>ID</th>
                         <th>Tên ga</th>
                         <th>Địa chỉ</th>
+                        <th>Tuyến</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -45,6 +46,8 @@ function StationTable({
                                 <td>{station.StationName}</td>
 
                                 <td>{station.Address}</td>
+
+                                <td>{station.LineName}</td>
 
                                 <td>
 

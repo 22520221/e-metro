@@ -6,6 +6,7 @@ function LineForm({
     setLineColor,
 
     handleAddLine,
+    handleUpdateLine,   
 
     editingId,
 
@@ -48,17 +49,20 @@ function LineForm({
             <br />
 
             <button
-            type="button"
-            onClick={handleAddLine}
-            disabled={isLoading}>
-
-                {
+                type="button"
+                disabled={isLoading}
+                onClick={
                     editingId === null
-                        ? "Thêm tuyến"
-                        : "Cập nhật tuyến"
+                    ? handleAddLine
+                    : handleUpdateLine
                 }
-
-            </button>
+            >
+                {
+                editingId === null
+                ? "Thêm tuyến"
+                : "Cập nhật tuyến"
+                }
+                </button>
 
         </div>
 
