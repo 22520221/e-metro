@@ -18,13 +18,15 @@ async function addTrain(req, res) {
             trainName,
             capacity,
             company,
-            status
+            status,
+            lineId
         } = req.body;
         await trainService.addTrain(
             trainName,
             capacity,
             company,
-            status
+            status,
+            lineId
         );
         return res.json({
             message: "Thêm tàu thành công!"
@@ -46,7 +48,8 @@ async function updateTrain(req, res) {
             trainName,
             capacity,
             company,
-            status
+            status,
+            lineId
         } = req.body;
 
         if (!trainName || !capacity || !company || !status) {
@@ -67,7 +70,9 @@ async function updateTrain(req, res) {
 
             company,
 
-            status
+            status,
+
+            lineId
 
         );
 

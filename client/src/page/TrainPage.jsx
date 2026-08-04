@@ -10,6 +10,8 @@ import {
     deleteTrain
 } from "../services/trainService";
 
+import { getLines } from "../services/lineService";
+
 function TrainPage(){
 // ==========================
 // 1. State
@@ -23,6 +25,9 @@ function TrainPage(){
     const [company, setCompany] = useState("");
     
     const [status, setStatus] = useState("Active");
+
+    const [lines, setLines] = useState([]);
+    const [lineId, setLineId] = useState("");
     
     const [editingId, setEditingId] = useState(null);
     
@@ -42,6 +47,7 @@ function TrainPage(){
     useEffect(() => {
 
         loadTrains();
+        loadLines();
 
     }, []);
 
@@ -65,9 +71,25 @@ function TrainPage(){
     }
 }
 
+    async function loadLines() {
+
+    try {
+
+        const data = await getLines();
+
+        setLines(data);
+
+    } catch (err) {
+
+        console.error(err);
+
+    }
+
+}
+
     async function handleAddTrain() {
 
-        if (!trainName || !company || !status) {
+        if (!trainName || !company || !status || !lineId) {
             alert("Vui lòng nhập đầy đủ thông tin.");
             return;
         }
@@ -81,7 +103,8 @@ function TrainPage(){
                 trainName,
                 capacity,
                 company,
-                status
+                status,
+                lineId
             );
 
             alert(result.message);
@@ -92,6 +115,7 @@ function TrainPage(){
             setCompany("");
             setCapacity("");
             setStatus("Active");
+            setLineId("");
 
         } catch (err) {
 
@@ -107,7 +131,7 @@ function TrainPage(){
 
     async function handleUpdateTrain() {
 
-        if (!trainName || !company || !status) {
+        if (!trainName || !company || !status || !lineId) {
             alert("Vui lòng nhập đầy đủ thông tin.");
             return;
         }
@@ -122,7 +146,8 @@ function TrainPage(){
                 trainName,
                 capacity,
                 company,
-                status
+                status,
+                lineId
             );
 
             alert(result.message);
@@ -134,6 +159,7 @@ function TrainPage(){
             setCapacity("");
             setCompany("");
             setStatus("Active");
+            setLineId("");
         } catch (err) {
 
             setError(err.message);
@@ -188,6 +214,8 @@ function handleEdit(train) {
     setCompany(train.Company);
 
     setStatus(train.Status);
+
+    setLineId(train.LineID);
 
 }
 
@@ -299,6 +327,10 @@ function handleSortChange(value) {
 
                 status={status}
                 setStatus={setStatus}
+
+                lines={lines}
+                lineId={lineId}
+                setLineId={setLineId}
 
                 editingId={editingId}
 

@@ -22,6 +22,7 @@ function TrainTable({
                         <th>Sức chứa</th>
                         <th>Công ty</th>
                         <th>Trạng thái</th>
+                        <th>Tuyến</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -35,6 +36,7 @@ function TrainTable({
                                 <td>{train.Capacity}</td>
                                 <td>{train.Company}</td>
                                 <td>{train.Status}</td>
+                                <td>{train.LineName}</td>
                                 <td>
                                     <button onClick={() => handleEdit(train)}>
                                         Sửa

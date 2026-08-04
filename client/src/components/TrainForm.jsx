@@ -11,6 +11,10 @@ function TrainForm({
     status,
     setStatus,
 
+    lines,
+    lineId,
+    setLineId,
+
     editingId,
 
     handleAddTrain,
@@ -59,6 +63,32 @@ function TrainForm({
                         Inactive
                     </option>
                 </select>
+
+                <br />
+                <br />
+
+                <select
+                    value={lineId}
+                    onChange={(e) => setLineId(e.target.value)}
+                >
+                    <option value="">
+                        -- Chọn tuyến --
+                    </option>
+
+                    {
+                        lines.map((line) => (
+                        <option
+                            key={line.LineID}
+                            value={line.LineID}
+                            >
+                            {line.LineName}
+                        </option>
+                        ))
+                    }
+                </select>
+
+                <br />
+                <br />
 
                 <button
                     disabled={isLoading}

@@ -14,7 +14,8 @@ async function addTrain(
     trainName,
     capacity,
     company,
-    status
+    status,
+    lineId
 ) {
     const response = await fetch(API_URL, {
         method: "POST",
@@ -26,6 +27,7 @@ async function addTrain(
             capacity,
             company,
             status,
+            lineId,
         }),
     });
 
@@ -42,7 +44,8 @@ async function updateTrain(
     trainName,
     capacity,
     company,
-    status
+    status,
+    lineId
 ) {
     const response = await fetch(`${API_URL}/${id}`, {
         method: "PUT",
@@ -54,6 +57,7 @@ async function updateTrain(
             capacity,
             company,
             status,
+            lineId
         }),
     });
 
