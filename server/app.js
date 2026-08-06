@@ -5,6 +5,7 @@ const stationRoutes = require("./routes/stationRoutes");
 const trainRoutes = require("./routes/trainRoutes");
 const lineRoutes = require("./routes/lineRoutes");
 const scheduleRoutes = require("./routes/scheduleRoutes");
+const ticketRoutes = require("./routes/ticketRoutes");
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/api/stations", stationRoutes);
 app.use("/api/trains", trainRoutes);
 app.use("/api/lines", lineRoutes);
 app.use("/api/schedules", scheduleRoutes);
+app.use("/api/tickets", ticketRoutes);
 
 app.get("/", (req, res) => {
     res.json({
