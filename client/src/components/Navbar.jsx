@@ -23,6 +23,10 @@ function Navbar() {
                 Lines
             </Link>
 
+            <Link to="/schedules">
+                Schedules
+            </Link>
+
         </nav>
 
     );
