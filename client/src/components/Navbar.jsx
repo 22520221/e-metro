@@ -27,6 +27,10 @@ function Navbar() {
                 Schedules
             </Link>
 
+            <Link to="/tickets">
+                Tickets
+            </Link>
+
         </nav>
 
     );

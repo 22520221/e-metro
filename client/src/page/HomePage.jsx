@@ -17,6 +17,18 @@ function HomePage() {
 
             <Link to="/trains">Quản lý Tàu</Link>
 
+            <br />
+            <br />
+            
+            <Link to="/lines">Quản lý Tuyến</Link>
+
+            <br />
+            <br />
+            <Link to="/schedules">Quản lý Lịch</Link>
+
+            <br />
+            <br />
+            <Link to="/tickets">Quản lý Vé</Link>
         </div>
 
     );
