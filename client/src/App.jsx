@@ -9,6 +9,7 @@ import LinePage from "./page/LinePage";
 import SchedulePage from "./page/SchedulePage";
 import TicketPage from "./page/TicketPage";
 import NotFoundPage from "./page/NotFoundPage";
+import DashboardPage from "./page/DashboardPage";
 
 import Layout from "./layouts/Layout";
 
@@ -51,6 +52,11 @@ function App() {
                 <Route
                     path="*"
                     element={<NotFoundPage />}
+                />
+
+                <Route
+                    path="/dashboard"
+                    element={<DashboardPage />}
                 />
 
             </Route>
