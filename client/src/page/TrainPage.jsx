@@ -205,18 +205,19 @@ function TrainPage(){
 
 function handleEdit(train) {
 
+    console.log("TRAIN CLICK:", train);
+
     setEditingId(train.TrainID);
 
-    setTrainName(train.TrainName);
+    setTrainName(train.TrainName || "");
 
-    setCapacity(train.Capacity);
+    setCapacity(train.Capacity ?? "");
 
-    setCompany(train.Company);
+    setCompany(train.Company || "");
 
-    setStatus(train.Status);
+    setStatus(train.Status || "Active");
 
-    setLineId(train.LineID);
-
+    setLineId(train.LineID ?? "");
 }
 
 // ==========================

@@ -1,0 +1,490 @@
+/* ========================================
+   COMMON STYLES - E-METRO
+======================================== */
+
+
+/* ========================================
+   PAGE
+======================================== */
+
+.page-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+
+.page-title {
+    margin: 0 0 25px 0;
+
+    font-size: 30px;
+    font-weight: 700;
+}
+
+
+/* ========================================
+   SECTION
+======================================== */
+
+.page-section {
+    margin-top: 30px;
+}
+
+
+.section-title {
+    margin: 0 0 20px 0;
+
+    font-size: 22px;
+    font-weight: 600;
+}
+
+
+/* ========================================
+   FORM
+======================================== */
+
+.form-container {
+    width: 100%;
+
+    padding: 25px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    background-color: white;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    margin-bottom: 16px;
+}
+
+
+.form-label {
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #374151;
+}
+
+
+.form-input,
+.form-select {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+
+    font-size: 15px;
+
+    background-color: white;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.form-input:focus,
+.form-select:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+.form-input:disabled,
+.form-select:disabled {
+    background-color: #f3f4f6;
+
+    cursor: not-allowed;
+}
+
+
+/* ========================================
+   BUTTON
+======================================== */
+
+.btn {
+    padding: 9px 16px;
+
+    border: none;
+    border-radius: 6px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease;
+}
+
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+
+.btn:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* Primary */
+
+.btn-primary {
+    background-color: #2563eb;
+
+    color: white;
+}
+
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+
+/* Edit */
+
+.btn-edit {
+    background-color: #f59e0b;
+
+    color: white;
+}
+
+
+.btn-edit:hover {
+    background-color: #d97706;
+}
+
+
+/* Delete */
+
+.btn-delete {
+    background-color: #dc2626;
+
+    color: white;
+}
+
+
+.btn-delete:hover {
+    background-color: #b91c1c;
+}
+
+
+/* Cancel */
+
+.btn-secondary {
+    background-color: #6b7280;
+
+    color: white;
+}
+
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+}
+
+
+/* ========================================
+   BUTTON GROUP
+======================================== */
+
+.button-group {
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+
+/* ========================================
+   SEARCH / FILTER
+======================================== */
+
+.search-filter {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+
+.search-input {
+    flex: 1;
+
+    min-width: 200px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+
+.search-input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* ========================================
+   TABLE
+======================================== */
+
+.table-container {
+    width: 100%;
+
+    overflow-x: auto;
+
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+
+    background-color: white;
+}
+
+
+.data-table {
+    width: 100%;
+
+    min-width: 700px;
+
+    border-collapse: collapse;
+}
+
+
+.data-table th,
+.data-table td {
+    padding: 12px 14px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.data-table th {
+    background-color: #f3f4f6;
+
+    color: #374151;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+.data-table td {
+    font-size: 14px;
+
+    color: #4b5563;
+}
+
+
+.data-table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* ========================================
+   TABLE ACTIONS
+======================================== */
+
+.table-actions {
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+
+/* ========================================
+   PAGINATION
+======================================== */
+
+.pagination {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+
+.pagination-info {
+    min-width: 100px;
+
+    text-align: center;
+
+    font-size: 14px;
+
+    color: #4b5563;
+}
+
+
+/* ========================================
+   ALERT / ERROR
+======================================== */
+
+.error-message {
+    padding: 12px 16px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid #f5c2c7;
+
+    border-radius: 8px;
+
+    background-color: #f8d7da;
+
+    color: #842029;
+}
+
+
+.success-message {
+    padding: 12px 16px;
+
+    margin-bottom: 20px;
+
+    border: 1px solid #badbcc;
+
+    border-radius: 8px;
+
+    background-color: #d1e7dd;
+
+    color: #0f5132;
+}
+
+
+/* ========================================
+   LOADING
+======================================== */
+
+.loading {
+    padding: 30px;
+
+    text-align: center;
+
+    font-size: 16px;
+
+    color: #6b7280;
+}
+
+
+/* ========================================
+   EMPTY DATA
+======================================== */
+
+.empty-data {
+    padding: 30px;
+
+    text-align: center;
+
+    color: #6b7280;
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 650px) {
+
+    .page-title {
+        font-size: 24px;
+    }
+
+
+    .form-container {
+        padding: 18px;
+    }
+
+
+    .search-filter {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+
+    .search-input {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+
+    .button-group {
+        flex-direction: column;
+    }
+
+
+    .button-group .btn {
+        width: 100%;
+    }
+
+
+    .table-actions {
+        flex-direction: column;
+    }
+
+
+    .table-actions .btn {
+        width: 100%;
+    }
+
+
+    .pagination {
+        gap: 8px;
+    }
+
+}
+

@@ -31,7 +31,7 @@ async function addStation(stationName, address, lineId) {
     return await response.json();
 }
 
-async function updateStation(id, stationName, address) {
+async function updateStation(id, stationName, address, lineId) {
     const response = await fetch(`${API_URL}/${id}`, {
         method: "PUT",
         headers: {

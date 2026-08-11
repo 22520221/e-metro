@@ -52,7 +52,7 @@ async function updateTrain(req, res) {
             lineId
         } = req.body;
 
-        if (!trainName || !capacity || !company || !status) {
+        if (!trainName || !capacity || !company || !status || !lineId) {
 
             return res.status(400).json({
                 message: "Vui lòng nhập đầy đủ thông tin."
@@ -62,7 +62,7 @@ async function updateTrain(req, res) {
 
         await trainService.updateTrain(
 
-            id,
+            Number(id),
 
             trainName,
 
@@ -72,7 +72,7 @@ async function updateTrain(req, res) {
 
             status,
 
-            lineId
+            Number(lineId)
 
         );
 

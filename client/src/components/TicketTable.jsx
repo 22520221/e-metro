@@ -9,107 +9,175 @@ function TicketTable({
 }) {
 
     return (
-        <div>
 
-            <h3>Danh sách vé</h3>
+        <div className="page-section">
 
-            <table border="1" cellPadding="10">
+            <h2 className="section-title">
+                Danh sách vé
+            </h2>
 
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tàu</th>
-                        <th>Ga</th>
-                        <th>Hành khách</th>
-                        <th>Số ghế</th>
-                        <th>Giá vé</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
 
-                <tbody>
+            {/* ==========================
+                TABLE
+            ========================== */}
 
-                    {
-                        tickets.length === 0 ? (
+            <div className="table-container">
 
-                            <tr>
-                                <td colSpan="8">
-                                    Không có dữ liệu
-                                </td>
-                            </tr>
+                <table className="data-table">
 
-                        ) : (
+                    <thead>
 
-                            tickets.map((ticket) => (
+                        <tr>
 
-                                <tr key={ticket.TicketID}>
+                            <th>ID</th>
+                            <th>Tàu</th>
+                            <th>Ga</th>
+                            <th>Hành khách</th>
+                            <th>Số ghế</th>
+                            <th>Giá vé</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
 
-                                    <td>{ticket.TicketID}</td>
-                                    <td>{ticket.TrainName}</td>
-                                    <td>{ticket.StationName}</td>
-                                    <td>{ticket.PassengerName}</td>
-                                    <td>{ticket.SeatNumber}</td>
-                                    <td>{ticket.Price}</td>
-                                    <td>{ticket.Status}</td>
+                        </tr>
 
-                                    <td>
+                    </thead>
 
-                                        <button
-                                            onClick={() => handleEdit(ticket)}
-                                        >
-                                            Sửa
-                                        </button>
 
-                                        {" "}
+                    <tbody>
 
-                                        <button
-                                            onClick={() =>
-                                                handleDeleteTicket(ticket.TicketID)
-                                            }
-                                        >
-                                            Xóa
-                                        </button>
+                        {
+                            tickets.length === 0 ? (
 
+                                <tr>
+
+                                    <td
+                                        colSpan="8"
+                                        className="empty-data"
+                                    >
+                                        Không có dữ liệu
                                     </td>
 
                                 </tr>
 
-                            ))
+                            ) : (
 
-                        )
-                    }
+                                tickets.map((ticket) => (
 
-                </tbody>
+                                    <tr
+                                        key={ticket.TicketID}
+                                    >
 
-            </table>
+                                        <td>
+                                            {ticket.TicketID}
+                                        </td>
 
-            <br />
+                                        <td>
+                                            {ticket.TrainName}
+                                        </td>
 
-            <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-            >
-                Previous
-            </button>
+                                        <td>
+                                            {ticket.StationName}
+                                        </td>
 
-            {" "}
+                                        <td>
+                                            {ticket.PassengerName}
+                                        </td>
 
-            <span>
-                Trang {currentPage} / {totalPages}
-            </span>
+                                        <td>
+                                            {ticket.SeatNumber}
+                                        </td>
 
-            {" "}
+                                        <td>
+                                            {Number(ticket.Price).toLocaleString("vi-VN")} ₫
+                                        </td>
 
-            <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-            >
-                Next
-            </button>
+                                        <td>
+                                            {ticket.Status}
+                                        </td>
+
+
+                                        {/* Actions */}
+
+                                        <td>
+
+                                            <div className="table-actions">
+
+                                                <button
+                                                    className="btn btn-edit"
+                                                    onClick={() =>
+                                                        handleEdit(ticket)
+                                                    }
+                                                >
+                                                    Sửa
+                                                </button>
+
+
+                                                <button
+                                                    className="btn btn-delete"
+                                                    onClick={() =>
+                                                        handleDeleteTicket(
+                                                            ticket.TicketID
+                                                        )
+                                                    }
+                                                >
+                                                    Xóa
+                                                </button>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                ))
+
+                            )
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {/* ==========================
+                PAGINATION
+            ========================== */}
+
+            <div className="pagination">
+
+                <button
+                    className="btn btn-secondary"
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+
+
+                <span className="pagination-info">
+
+                    Trang {currentPage} / {totalPages}
+
+                </span>
+
+
+                <button
+                    className="btn btn-secondary"
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                >
+                    Next
+                </button>
+
+            </div>
 
         </div>
+
     );
+
 }
 
 export default TicketTable;
+

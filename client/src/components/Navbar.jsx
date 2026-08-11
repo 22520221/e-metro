@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
 import "./Navbar.css";
 
 function Navbar() {
@@ -7,29 +8,77 @@ function Navbar() {
 
         <nav className="navbar">
 
-            <Link to="/" end>
-                Home
-            </Link>
+            <div className="navbar-brand">
+                e-Metro
+            </div>
 
-            <Link to="/stations">
-                Stations
-            </Link>
+            <div className="navbar-links">
 
-            <Link to="/trains">
-                Trains
-            </Link>
+                <NavLink
+                    to="/"
+                    end
+                    className={({ isActive }) =>
+                        isActive ? "navbar-link active" : "navbar-link"
+                    }
+                >
+                    Home
+                </NavLink>
 
-            <Link to="/lines">
-                Lines
-            </Link>
+                <NavLink
+                    to="/stations"
+                    className={({ isActive }) =>
+                        isActive ? "navbar-link active" : "navbar-link"
+                    }
+                >
+                    Stations
+                </NavLink>
 
-            <Link to="/schedules">
-                Schedules
-            </Link>
+                <NavLink
+                    to="/trains"
+                    className={({ isActive }) =>
+                        isActive ? "navbar-link active" : "navbar-link"
+                    }
+                >
+                    Trains
+                </NavLink>
 
-            <Link to="/tickets">
-                Tickets
-            </Link>
+                <NavLink
+                    to="/lines"
+                    className={({ isActive }) =>
+                        isActive ? "navbar-link active" : "navbar-link"
+                    }
+                >
+                    Lines
+                </NavLink>
+
+                <NavLink
+                    to="/schedules"
+                    className={({ isActive }) =>
+                        isActive ? "navbar-link active" : "navbar-link"
+                    }
+                >
+                    Schedules
+                </NavLink>
+
+                <NavLink
+                    to="/tickets"
+                    className={({ isActive }) =>
+                        isActive ? "navbar-link active" : "navbar-link"
+                    }
+                >
+                    Tickets
+                </NavLink>
+
+                <NavLink
+                    to="/dashboard"
+                    className={({ isActive }) =>
+                        isActive ? "navbar-link active" : "navbar-link"
+                    }
+                >
+                    Dashboards
+                </NavLink>
+
+            </div>
 
         </nav>
 
@@ -38,3 +87,4 @@ function Navbar() {
 }
 
 export default Navbar;
+

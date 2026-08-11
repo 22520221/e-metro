@@ -123,15 +123,19 @@ const [error, setError] = useState("");
 
     }
 
-    function handleEdit(station) {
 
-        setEditingId(station.StationID);
+function handleEdit(station) {
 
-        setStationName(station.StationName);
+    setEditingId(station.StationID);
 
-        setAddress(station.Address);
+    setStationName(station.StationName);
 
-    }
+    setAddress(station.Address);
+
+    setLineId(station.LineID);
+}
+
+
 
     async function handleUpdateStation() {
 
@@ -148,7 +152,8 @@ const [error, setError] = useState("");
             const result = await updateStation(
                 editingId,
                 stationName,
-                address
+                address,
+                lineId
             );
 
             alert(result.message);
@@ -157,6 +162,7 @@ const [error, setError] = useState("");
 
             setStationName("");
             setAddress("");
+            setLineId("");
 
             setEditingId(null);
 

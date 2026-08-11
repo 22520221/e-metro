@@ -1,0 +1,53 @@
+/* ==========================
+   APP LAYOUT
+========================== */
+
+.app-layout {
+    min-height: 100vh;
+
+    background-color: #f5f7fb;
+}
+
+
+/* ==========================
+   MAIN CONTENT
+========================== */
+
+.main-content {
+    width: 100%;
+
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+}
+
+
+/* ==========================
+   TABLET
+========================== */
+
+@media (max-width: 900px) {
+
+    .main-content {
+        padding: 20px;
+    }
+
+}
+
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 650px) {
+
+    .main-content {
+        padding: 15px;
+    }
+
+}
+

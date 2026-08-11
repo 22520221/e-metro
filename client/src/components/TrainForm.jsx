@@ -69,7 +69,13 @@ function TrainForm({
 
                 <select
                     value={lineId}
-                    onChange={(e) => setLineId(e.target.value)}
+                    onChange={(e) =>
+                        setLineId(
+                            e.target.value === ""
+                            ? ""
+                            : Number(e.target.value)
+                        )
+                    }
                 >
                     <option value="">
                         -- Chọn tuyến --

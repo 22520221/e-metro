@@ -31,177 +31,246 @@ function TicketForm({
 }) {
 
     return (
-        <div>
 
-            <h2>
-                {
-                    editingId === null
-                        ? "Thêm vé mới"
-                        : "Cập nhật vé"
-                }
-            </h2>
+        <div className="page-section">
 
-            {/* Chọn lịch */}
+            {/* ==========================
+                FORM
+            ========================== */}
 
-            <select
-                value={scheduleId}
-                onChange={(e) =>
-                    setScheduleId(Number(e.target.value))
-                }
-            >
+            <div className="form-container">
 
-                <option value="">
-                    -- Chọn lịch --
-                </option>
+                <h2 className="section-title">
 
-                {
-                    schedules.map((schedule) => (
+                    {
+                        editingId === null
+                            ? "Thêm vé mới"
+                            : "Cập nhật vé"
+                    }
 
-                        <option
-                            key={schedule.ScheduleID}
-                            value={schedule.ScheduleID}
-                        >
-                            Lịch #{schedule.ScheduleID} - {schedule.TrainName} - {schedule.StationName}
+                </h2>
+
+
+                {/* Chọn lịch */}
+
+                <div className="form-group">
+
+                    <label className="form-label">
+                        Lịch chạy
+                    </label>
+
+                    <select
+                        className="form-select"
+                        value={scheduleId}
+                        onChange={(e) =>
+                            setScheduleId(Number(e.target.value))
+                        }
+                    >
+
+                        <option value="">
+                            -- Chọn lịch --
                         </option>
 
-                    ))
-                }
+                        {
+                            schedules.map((schedule) => (
 
-            </select>
+                                <option
+                                    key={schedule.ScheduleID}
+                                    value={schedule.ScheduleID}
+                                >
 
-            <br />
-            <br />
+                                    Lịch #{schedule.ScheduleID}
+                                    {" - "}
+                                    {schedule.TrainName}
+                                    {" - "}
+                                    {schedule.StationName}
 
-            {/* Tên hành khách */}
+                                </option>
 
-            <input
-                type="text"
-                placeholder="Tên hành khách"
-                value={passengerName}
-                onChange={(e) =>
-                    setPassengerName(e.target.value)
-                }
-            />
+                            ))
+                        }
 
-            <br />
-            <br />
+                    </select>
 
-            {/* Số ghế */}
+                </div>
 
-            <input
-                type="text"
-                placeholder="Số ghế"
-                value={seatNumber}
-                onChange={(e) =>
-                    setSeatNumber(e.target.value)
-                }
-            />
 
-            <br />
-            <br />
+                {/* Tên hành khách */}
 
-            {/* Giá */}
+                <div className="form-group">
 
-            <input
-                type="number"
-                placeholder="Giá vé"
-                value={price}
-                onChange={(e) =>
-                    setPrice(Number(e.target.value))
-                }
-            />
+                    <label className="form-label">
+                        Tên hành khách
+                    </label>
 
-            <br />
-            <br />
+                    <input
+                        className="form-input"
+                        type="text"
+                        placeholder="Nhập tên hành khách"
+                        value={passengerName}
+                        onChange={(e) =>
+                            setPassengerName(e.target.value)
+                        }
+                    />
 
-            {/* Trạng thái */}
+                </div>
 
-            <select
-                value={status}
-                onChange={(e) =>
-                    setStatus(e.target.value)
-                }
+
+                {/* Số ghế */}
+
+                <div className="form-group">
+
+                    <label className="form-label">
+                        Số ghế
+                    </label>
+
+                    <input
+                        className="form-input"
+                        type="text"
+                        placeholder="Nhập số ghế"
+                        value={seatNumber}
+                        onChange={(e) =>
+                            setSeatNumber(e.target.value)
+                        }
+                    />
+
+                </div>
+
+
+                {/* Giá vé */}
+
+                <div className="form-group">
+
+                    <label className="form-label">
+                        Giá vé
+                    </label>
+
+                    <input
+                        className="form-input"
+                        type="number"
+                        placeholder="Nhập giá vé"
+                        value={price}
+                        onChange={(e) =>
+                            setPrice(Number(e.target.value))
+                        }
+                    />
+
+                </div>
+
+
+                {/* Trạng thái */}
+
+                <div className="form-group">
+
+                    <label className="form-label">
+                        Trạng thái
+                    </label>
+
+                    <select
+                        className="form-select"
+                        value={status}
+                        onChange={(e) =>
+                            setStatus(e.target.value)
+                        }
+                    >
+
+                        <option value="Booked">
+                            Booked
+                        </option>
+
+                        <option value="Cancelled">
+                            Cancelled
+                        </option>
+
+                        <option value="Used">
+                            Used
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                {/* Button */}
+
+                <div className="button-group">
+
+                    <button
+                        className="btn btn-primary"
+                        type="button"
+                        disabled={isLoading}
+                        onClick={
+                            editingId === null
+                                ? handleAddTicket
+                                : handleUpdateTicket
+                        }
+                    >
+
+                        {
+                            isLoading
+                                ? "Đang xử lý..."
+                                : editingId === null
+                                ? "Thêm vé"
+                                : "Cập nhật vé"
+                        }
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            {/* ==========================
+                SEARCH + SORT
+            ========================== */}
+
+            <div
+                className="search-filter"
+                style={{ marginTop: "25px" }}
             >
 
-                <option value="Booked">
-                    Booked
-                </option>
+                {/* Search */}
 
-                <option value="Cancelled">
-                    Cancelled
-                </option>
+                <input
+                    className="search-input"
+                    type="text"
+                    placeholder="Tìm hành khách..."
+                    value={searchTerm}
+                    onChange={(e) =>
+                        handleSearchChange(e.target.value)
+                    }
+                />
 
-                <option value="Used">
-                    Used
-                </option>
 
-            </select>
+                {/* Sort */}
 
-            <br />
-            <br />
+                <select
+                    className="form-select"
+                    value={sortOrder}
+                    onChange={(e) =>
+                        handleSortChange(e.target.value)
+                    }
+                    style={{ width: "180px" }}
+                >
 
-            {/* Button */}
+                    <option value="asc">
+                        A → Z
+                    </option>
 
-            <button
-                type="button"
-                disabled={isLoading}
-                onClick={
-                    editingId === null
-                        ? handleAddTicket
-                        : handleUpdateTicket
-                }
-            >
+                    <option value="desc">
+                        Z → A
+                    </option>
 
-                {
-                    isLoading
-                        ? "Đang xử lý..."
-                        : editingId === null
-                        ? "Thêm vé"
-                        : "Cập nhật vé"
-                }
+                </select>
 
-            </button>
-
-            <hr />
-
-            {/* Search */}
-
-            <input
-                type="text"
-                placeholder="Tìm hành khách..."
-                value={searchTerm}
-                onChange={(e) =>
-                    handleSearchChange(e.target.value)
-                }
-            />
-
-            <br />
-            <br />
-
-            {/* Sort */}
-
-            <select
-                value={sortOrder}
-                onChange={(e) =>
-                    handleSortChange(e.target.value)
-                }
-            >
-
-                <option value="asc">
-                    A → Z
-                </option>
-
-                <option value="desc">
-                    Z → A
-                </option>
-
-            </select>
-
-            <br />
-            <br />
+            </div>
 
         </div>
+
     );
+
 }
 
 export default TicketForm;
+
