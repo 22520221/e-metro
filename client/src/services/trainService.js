@@ -33,7 +33,7 @@ async function addTrain(
 
     if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Thêm tàu thất bại");
+        throw new Error(error.message || "Thêm tàu thất bại");
     }
 
     return await response.json();
@@ -63,7 +63,7 @@ async function updateTrain(
 
     if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Cập nhật tàu thất bại");
+        throw new Error(error.message || "Cập nhật tàu thất bại");
     }
 
     return await response.json();
@@ -76,7 +76,7 @@ async function deleteTrain(id) {
 
     if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error || "Xóa tàu thất bại");
+        throw new Error(error.message || "Xóa tàu thất bại");
     }
 
     return await response.json();

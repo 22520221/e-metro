@@ -71,11 +71,28 @@ async function updateSchedule(id, trainID, stationID, arrivalTime, departureTime
 }
 
 async function deleteSchedule(id) {
+
     await sql.connect(config);
 
+    // Kiểm tra Schedule có vé hay không
+    const check = await sql.query`
+        SELECT COUNT(*) AS Total
+        FROM Ticket
+        WHERE ScheduleID = ${id}
+    `;
+
+    if (check.recordset[0].Total > 0) {
+
+        throw new Error(
+            "Không thể xóa lịch chạy vì đang có vé."
+        );
+
+    }
+
+    // Không có vé -> cho phép xóa
     await sql.query`
         DELETE FROM Schedule
-        WHERE ScheduleID = ${id} 
+        WHERE ScheduleID = ${id}
     `;
 }
 

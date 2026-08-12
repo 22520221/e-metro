@@ -44,6 +44,19 @@ async function updateStation(id, stationName, address, lineId) {
 async function deleteStation(id) {
     await sql.connect(config);
 
+    // Kiểm tra ga có đang được sử dụng trong Schedule không 
+    const check = await sql.query
+    ` SELECT COUNT(*) AS Total 
+    FROM Schedule 
+    WHERE StationID = ${id} 
+    `; 
+    
+    if (check.recordset[0].Total > 0) { 
+        throw new Error( 
+            "Không thể xóa ga vì ga đang có lịch chạy." 
+            ); 
+        }
+
     await sql.query`
         DELETE FROM Station
         WHERE StationID = ${id} 
