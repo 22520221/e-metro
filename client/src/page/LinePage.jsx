@@ -9,6 +9,8 @@ import { getLines,
         deleteLine
  } from "../services/lineService";
 
+ import "../styles/LinePage.css";
+
 function LinePage() {
 
 // ==========================
@@ -63,11 +65,38 @@ const [error, setError] = useState("");
     }
 }
 
+    function validateLine() {
+
+    if (!lineName.trim()) {
+        return "Tên tuyến không được để trống.";
+    }
+
+    if (!lineColor.trim()) {
+        return "Màu tuyến không được để trống.";
+    }
+
+    if (lineName.trim().length < 2) {   
+        return "Tên tuyến phải có ít nhất 2 ký tự.";
+    }
+
+    if (lineName.trim().length > 100) {
+        return "Tên tuyến không được vượt quá 100 ký tự.";
+    }
+
+    if (lineColor.trim().length > 50) {
+        return "Màu tuyến không được vượt quá 50 ký tự.";
+    }
+
+    return "";
+}
+
 async function handleAddLine() {
 
-        if (!lineName.trim() || !lineColor.trim()) {
-            alert("Vui lòng nhập đầy đủ thông tin.");
-        return;
+        const validationError = validateLine();
+
+        if (validationError) {
+            setError(validationError);
+            return;
         }
 
         setIsLoading(true);
@@ -111,8 +140,15 @@ function handleEdit(line) {
 
     async function handleUpdateLine() {
 
-        if (!lineName.trim() || !lineColor.trim()) {
-            alert("Vui lòng nhập đầy đủ thông tin.");
+        const validationError = validateLine();
+
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
+
+        if (editingId === null) {
+            setError("Không xác định được tuyến cần cập nhật.");
             return;
         }
 
@@ -184,6 +220,68 @@ function handleEdit(line) {
     }
 
 // ==========================
+// 4. search sort
+// ==========================
+
+    function handleSearchChange(value) {
+        setSearchTerm(value);
+        setCurrentPage(1);
+    }
+
+    function handleSortChange(value) {
+        setSortOrder(value);
+        setCurrentPage(1);
+    }
+
+    const filteredLines = lines
+    .filter((line) =>
+        line.LineName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+
+        if (sortOrder === "asc") {
+            return a.LineName.localeCompare(b.LineName);
+        }
+
+        return b.LineName.localeCompare(a.LineName);
+    });
+
+// ==========================
+// 3. pagination
+// ==========================
+
+    const totalPages = Math.max(
+        1,
+        Math.ceil(filteredLines.length / itemsPerPage)
+    );
+
+    const startIndex =
+        (currentPage - 1) * itemsPerPage;
+
+    const currentLines = filteredLines.slice(
+        startIndex,
+        startIndex + itemsPerPage
+    );
+
+    function handleNextPage() {
+
+        if (currentPage < totalPages) {
+            setCurrentPage(currentPage + 1);
+        }
+
+    }
+
+    function handlePreviousPage() {
+
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+
+    }
+
+// ==========================
 // 6. return
 // ==========================
 
@@ -211,22 +309,27 @@ return (
                 handleUpdateLine={handleUpdateLine}
 
                 searchTerm={searchTerm}
-
                 sortOrder={sortOrder}
 
-                editingId={editingId}
+                handleSearchChange={handleSearchChange}
+                handleSortChange={handleSortChange}
 
+
+                editingId={editingId}
                 isLoading={isLoading}
             />
 
             <LineTable
-                lines={lines}
+                lines={currentLines}
 
                 currentPage={currentPage}
-                
-                handleEdit={handleEdit}
+                totalPages={totalPages}
 
+                handleEdit={handleEdit}
                 handleDeleteLine={handleDeleteLine}
+
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
             />
 
         </div>

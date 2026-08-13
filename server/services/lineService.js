@@ -12,6 +12,34 @@ async function getLines() {
     return result.recordset;
 }
 
+async function checkLineNameExists(lineName, excludeId = null) {
+
+    await sql.connect(config);
+
+    let result;
+
+    if (excludeId === null) {
+
+        result = await sql.query`
+            SELECT LineID
+            FROM Line
+            WHERE LineName = ${lineName}
+        `;
+
+    } else {
+
+        result = await sql.query`
+            SELECT LineID
+            FROM Line
+            WHERE LineName = ${lineName}
+            AND LineID <> ${excludeId}
+        `;
+
+    }
+
+    return result.recordset.length > 0;
+}
+
 async function addLine(LineName, LineColor) {
     await sql.connect(config);
 
@@ -73,5 +101,6 @@ module.exports = {
     getLines,
     addLine,
     updateLine,
-    deleteLine
+    deleteLine,
+    checkLineNameExists
 };

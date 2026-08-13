@@ -6,68 +6,141 @@ function LineForm({
     setLineColor,
 
     handleAddLine,
-    handleUpdateLine,   
+    handleUpdateLine,
+
+    searchTerm,
+    sortOrder,
+
+    handleSearchChange,
+    handleSortChange,
 
     editingId,
-
     isLoading,
 }) {
 
     return (
+        <div className="line-form-container">
 
-        <div>
-
-            <h2>
-
+            <h2 className="line-form-title">
                 {
                     editingId === null
                         ? "Thêm tuyến mới"
                         : "Cập nhật tuyến"
-
                 }
-
             </h2>
 
-            <input
-                type="text"
-                placeholder="Tên tuyến"
-                value={lineName}
-                onChange={(e)=>setLineName(e.target.value)}
-            />
 
-            <br />
-            <br />
+            {/* ==========================
+                FORM
+            ========================== */}
 
-            <input
-                type="text"
-                placeholder="Màu tuyến"
-                value={lineColor}
-                onChange={(e)=>setLineColor(e.target.value)}
-            />
+            <div className="line-form">
 
-            <br />
-            <br />
+                <div className="line-form-group">
 
-            <button
-                type="button"
-                disabled={isLoading}
-                onClick={
-                    editingId === null
-                    ? handleAddLine
-                    : handleUpdateLine
-                }
-            >
-                {
-                editingId === null
-                ? "Thêm tuyến"
-                : "Cập nhật tuyến"
-                }
+                    <label>
+                        Tên tuyến
+                    </label>
+
+                    <input
+                        type="text"
+                        placeholder="Nhập tên tuyến..."
+                        value={lineName}
+                        onChange={(e) =>
+                            setLineName(e.target.value)
+                        }
+                    />
+
+                </div>
+
+
+                <div className="line-form-group">
+
+                    <label>
+                        Màu tuyến
+                    </label>
+
+                    <input
+                        type="text"
+                        placeholder="Nhập màu tuyến..."
+                        value={lineColor}
+                        onChange={(e) =>
+                            setLineColor(e.target.value)
+                        }
+                    />
+
+                </div>
+
+
+                <button
+                    type="button"
+                    className="line-submit-button"
+                    disabled={isLoading}
+                    onClick={
+                        editingId === null
+                            ? handleAddLine
+                            : handleUpdateLine
+                    }
+                >
+
+                    {
+                        isLoading
+                            ? "Đang xử lý..."
+                            : editingId === null
+                            ? "Thêm tuyến"
+                            : "Cập nhật tuyến"
+                    }
+
                 </button>
 
+            </div>
+
+
+            {/* ==========================
+                SEARCH + SORT
+            ========================== */}
+
+            <div className="line-toolbar">
+
+                <div className="line-search">
+
+                    <input
+                        type="text"
+                        placeholder="Tìm tên tuyến..."
+                        value={searchTerm}
+                        onChange={(e) =>
+                            handleSearchChange(e.target.value)
+                        }
+                    />
+
+                </div>
+
+
+                <div className="line-sort">
+
+                    <select
+                        value={sortOrder}
+                        onChange={(e) =>
+                            handleSortChange(e.target.value)
+                        }
+                    >
+
+                        <option value="asc">
+                            A → Z
+                        </option>
+
+                        <option value="desc">
+                            Z → A
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
         </div>
-
     );
-
 }
 
 export default LineForm;

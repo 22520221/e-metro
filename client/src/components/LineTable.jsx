@@ -2,71 +2,166 @@ function LineTable({
 
     lines,
 
+    currentPage,
+    totalPages,
+
     handleEdit,
     handleDeleteLine,
+
+    handleNextPage,
+    handlePreviousPage
 
 }) {
 
     return (
 
-        <div>
+        <div className="line-table-container">
 
-            <h3>Danh sách tuyến</h3>
+            <h3 className="line-table-title">
+                Danh sách tuyến
+            </h3>
 
-            <table border="1" cellPadding="10">
 
-                <thead>
+            <div className="line-table-wrapper">
 
-                    <tr>
+                <table className="line-table">
 
-                        <th>ID</th>
-                        <th>Tên tuyến</th>
-                        <th>Màu tuyến</th>
-                        <th>Hành động</th>
+                    <thead>
 
-                    </tr>
+                        <tr>
 
-                </thead>
+                            <th>ID</th>
+                            <th>Tên tuyến</th>
+                            <th>Màu tuyến</th>
+                            <th>Hành động</th>
 
-                <tbody>
+                        </tr>
 
-                    {
-                        lines.map((line) => (
+                    </thead>
 
-                            <tr key={line.LineID}>
 
-                                <td>{line.LineID}</td>
+                    <tbody>
 
-                                <td>{line.LineName}</td>
+                        {
+                            lines.length === 0 ? (
 
-                                <td>{line.LineColor}</td>
+                                <tr>
 
-                                <td>
+                                    <td colSpan="4" className="line-empty">
 
-                                    <button
-                                        onClick={() => handleEdit(line)}
-                                    >
-                                        Sửa
-                                    </button>
+                                        Không có dữ liệu
 
-                                    {" "}
+                                    </td>
 
-                                    <button
-                                        onClick={() => handleDeleteLine(line.LineID)}
-                                    >
-                                        Xóa
-                                    </button>
+                                </tr>
 
-                                </td>
+                            ) : (
 
-                            </tr>
+                                lines.map((line) => (
 
-                        ))
-                    }
+                                    <tr key={line.LineID}>
 
-                </tbody>
+                                        <td>
+                                            {line.LineID}
+                                        </td>
 
-            </table>
+
+                                        <td>
+                                            {line.LineName}
+                                        </td>
+
+
+                                        <td>
+
+                                            <div className="line-color">
+
+                                                <span
+                                                    className="line-color-preview"
+                                                    style={{
+                                                        backgroundColor:
+                                                            line.LineColor
+                                                    }}
+                                                />
+
+                                                <span>
+                                                    {line.LineColor}
+                                                </span>
+
+                                            </div>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <div className="line-actions">
+
+                                                <button
+                                                    className="line-edit-button"
+                                                    onClick={() =>
+                                                        handleEdit(line)
+                                                    }
+                                                >
+                                                    Sửa
+                                                </button>
+
+
+                                                <button
+                                                    className="line-delete-button"
+                                                    onClick={() =>
+                                                        handleDeleteLine(
+                                                            line.LineID
+                                                        )
+                                                    }
+                                                >
+                                                    Xóa
+                                                </button>
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                ))
+
+                            )
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {/* ==========================
+                PAGINATION
+            ========================== */}
+
+            <div className="line-pagination">
+
+                <button
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+
+
+                <span>
+                    Trang {currentPage} / {totalPages}
+                </span>
+
+
+                <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                >
+                    Next
+                </button>
+
+            </div>
 
         </div>
 
