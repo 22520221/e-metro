@@ -3,89 +3,161 @@ function ScheduleTable({
 
     handleEdit,
     handleDeleteSchedule,
+
+    handleNextPage,
+    handlePreviousPage,
+
+    currentPage,
+    totalPages,
 }) {
+
     return (
-        <div>
-            <table border="1" cellPadding="8">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tàu</th>
-                        <th>Ga</th>
-                        <th>Giờ đến</th>
-                        <th>Giờ đi</th>
-                        <th>Thứ tự dừng</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
+        <div className="page-section">
 
-                <tbody>
+            <h2 className="section-title">
+                Danh sách lịch chạy
+            </h2>
 
-                    {
-                        schedules.length === 0 ? (
 
-                    <tr>
+            {/* ==========================
+                TABLE
+            ========================== */}
 
-                        <td colSpan="7">
-                            Không có dữ liệu
-                        </td>
+            <div className="table-container">
 
-                    </tr>
+                <table className="data-table">
 
-                    ) : (
+                    <thead>
 
-                        schedules.map((schedule) => (
+                        <tr>
 
-                    <tr key={schedule.ScheduleID}>
+                            <th>ID</th>
+                            <th>Tàu</th>
+                            <th>Ga</th>
+                            <th>Giờ đến</th>
+                            <th>Giờ đi</th>
+                            <th>Thứ tự dừng</th>
+                            <th>Hành động</th>
 
-                        <td>{schedule.ScheduleID}</td>
+                        </tr>
 
-                        <td>{schedule.TrainName}</td>
+                    </thead>
 
-                        <td>{schedule.StationName}</td>
 
-                        <td>
-                            {new Date(schedule.ArrivalTime).toLocaleString("vi-VN")}
-                        </td>
+                    <tbody>
 
-                        <td>
-                            {new Date(schedule.DepartureTime).toLocaleString("vi-VN")}
-                        </td>
+                        {schedules.length === 0 ? (
 
-                        <td>{schedule.StopOrder}</td>
+                            <tr>
 
-                        <td>
+                                <td colSpan="7">
+                                    Không có dữ liệu
+                                </td>
 
-                            <button
-                                onClick={() => handleEdit(schedule)}
-                            >
-                                Sửa
-                            </button>
+                            </tr>
 
-                            {" "}
+                        ) : (
 
-                            <button
-                                onClick={() =>
-                                handleDeleteSchedule(schedule.ScheduleID)
-                                }
-                            >
-                                Xóa
-                            </button>
+                            schedules.map((schedule) => (
 
-                        </td>
+                                <tr key={schedule.ScheduleID}>
 
-                    </tr>
+                                    <td>
+                                        {schedule.ScheduleID}
+                                    </td>
 
-                    ))
+                                    <td>
+                                        {schedule.TrainName}
+                                    </td>
 
-                    )
-                    }
+                                    <td>
+                                        {schedule.StationName}
+                                    </td>
 
-                </tbody>
+                                    <td>
+                                        {new Date(
+                                            schedule.ArrivalTime
+                                        ).toLocaleString("vi-VN")}
+                                    </td>
 
-            </table>
+                                    <td>
+                                        {new Date(
+                                            schedule.DepartureTime
+                                        ).toLocaleString("vi-VN")}
+                                    </td>
+
+                                    <td>
+                                        {schedule.StopOrder}
+                                    </td>
+
+                                    <td>
+
+                                        <div className="table-actions">
+
+                                            <button
+                                                className="btn btn-edit"
+                                                onClick={() =>
+                                                    handleEdit(schedule)
+                                                }
+                                            >
+                                                Sửa
+                                            </button>
+
+
+                                            <button
+                                                className="btn btn-delete"
+                                                onClick={() =>
+                                                    handleDeleteSchedule(
+                                                        schedule.ScheduleID
+                                                    )
+                                                }
+                                            >
+                                                Xóa
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            ))
+
+                        )}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div className="pagination">
+
+                <button
+                    className="btn btn-secondary"
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+
+                <span className="pagination-info">
+                    Trang {currentPage} / {totalPages}
+                </span>
+
+                <button
+                    className="btn btn-secondary"
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                >
+                    Next
+                </button>
+
+            </div>
+
         </div>
     );
 }
 
 export default ScheduleTable;
+

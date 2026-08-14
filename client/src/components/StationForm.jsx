@@ -15,7 +15,6 @@ function StationForm({
     sortOrder,
     handleSortChange,
 
-
     editingId,
 
     handleAddStation,
@@ -24,117 +23,166 @@ function StationForm({
     isLoading,
 }) {
     return (
-        <div>
+        <div className="form-container">
 
-            <h2>
-                {editingId === null ? "Thêm ga mới" : "Cập nhật ga"}
-            </h2>
-
-            <input
-                type="text"
-                placeholder="Tên ga"
-                value={stationName}
-                onChange={(e) => setStationName(e.target.value)}
-            />
-
-            <br />
-            <br />
-
-            <input
-                type="text"
-                placeholder="Địa chỉ"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-            />
-
-            <br />
-            <br />
-
-            <select
-                value={lineId}
-                onChange={(e) => setLineId(e.target.value)}
-            >
-
-            <option value="">
-                -- Chọn tuyến --
-            </option>
-
-            {
-                lines.map((line) => (
-
-                <option
-                    key={line.LineID}
-                    value={line.LineID}
-                >
-                    {line.LineName}
-                </option>
-
-                ))
-            }
-
-            </select>
-
-            <br />
-            <br />
-
-            <br />
-            <br />
-
-            <button
-                disabled={isLoading}
-                onClick={
-                    editingId === null
-                        ? handleAddStation
-                        : handleUpdateStation
-                }
-            >
-                {isLoading
-                    ? "Đang xử lý..."
-                    : editingId === null
+            <h2 className="section-title">
+                {editingId === null
                     ? "Thêm ga mới"
                     : "Cập nhật ga"}
-            </button>
+            </h2>
+
+
+            {/* ==========================
+                TÊN GA
+            ========================== */}
+
+            <div className="form-group">
+
+                <label className="form-label">
+                    Tên ga
+                </label>
+
+                <input
+                    className="form-input"
+                    type="text"
+                    placeholder="Tên ga"
+                    value={stationName}
+                    onChange={(e) =>
+                        setStationName(e.target.value)
+                    }
+                />
+
+            </div>
+
+
+            {/* ==========================
+                ĐỊA CHỈ
+            ========================== */}
+
+            <div className="form-group">
+
+                <label className="form-label">
+                    Địa chỉ
+                </label>
+
+                <input
+                    className="form-input"
+                    type="text"
+                    placeholder="Địa chỉ"
+                    value={address}
+                    onChange={(e) =>
+                        setAddress(e.target.value)
+                    }
+                />
+
+            </div>
+
+
+            {/* ==========================
+                TUYẾN
+            ========================== */}
+
+            <div className="form-group">
+
+                <label className="form-label">
+                    Tuyến
+                </label>
+
+                <select
+                    className="form-select"
+                    value={lineId}
+                    onChange={(e) =>
+                        setLineId(e.target.value)
+                    }
+                >
+
+                    <option value="">
+                        -- Chọn tuyến --
+                    </option>
+
+                    {lines.map((line) => (
+
+                        <option
+                            key={line.LineID}
+                            value={line.LineID}
+                        >
+                            {line.LineName}
+                        </option>
+
+                    ))}
+
+                </select>
+
+            </div>
+
+
+            {/* ==========================
+                BUTTON
+            ========================== */}
+
+            <div className="button-group">
+
+                <button
+                    className="btn btn-primary"
+                    disabled={isLoading}
+                    onClick={
+                        editingId === null
+                            ? handleAddStation
+                            : handleUpdateStation
+                    }
+                >
+                    {isLoading
+                        ? "Đang xử lý..."
+                        : editingId === null
+                        ? "Thêm ga mới"
+                        : "Cập nhật ga"}
+                </button>
+
+            </div>
+
 
             <hr />
 
-            <input
-                type="text"
-                placeholder="Tìm kiếm ga..."
-                value={searchTerm}
-                onChange={(e)=>
 
-                handleSearchChange(e.target.value)
+            {/* ==========================
+                SEARCH / SORT
+            ========================== */}
 
-                }
-            />
+            <div className="search-filter">
 
-            <br />
-            <br />
+                <input
+                    className="search-input"
+                    type="text"
+                    placeholder="Tìm kiếm ga..."
+                    value={searchTerm}
+                    onChange={(e) =>
+                        handleSearchChange(e.target.value)
+                    }
+                />
 
-            <select
-                value={sortOrder}
-                onChange={(e)=>
+                <select
+                    className="form-select"
+                    value={sortOrder}
+                    onChange={(e) =>
+                        handleSortChange(e.target.value)
+                    }
+                >
 
-                handleSortChange(e.target.value)
+                    <option value="asc">
+                        A → Z
+                    </option>
 
-                }
-            >
-                <option value="asc">
-                    A → Z
-                </option>
+                    <option value="desc">
+                        Z → A
+                    </option>
 
-                <option value="desc">
-                    Z → A
-                </option>
-            </select>
+                </select>
 
-            <br />
-            <br />
+            </div>
 
-            <br />
-            <br />
         </div>
     );
 }
 
 export default StationForm;
+

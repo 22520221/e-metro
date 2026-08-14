@@ -8,8 +8,8 @@ import TrainPage from "./page/TrainPage";
 import LinePage from "./page/LinePage";
 import SchedulePage from "./page/SchedulePage";
 import TicketPage from "./page/TicketPage";
-import NotFoundPage from "./page/NotFoundPage";
 import DashboardPage from "./page/DashboardPage";
+import NotFoundPage from "./page/NotFoundPage";
 
 import Layout from "./layouts/Layout";
 
@@ -25,6 +25,11 @@ function App() {
                 />
 
                 <Route
+                    path="/dashboard"
+                    element={<DashboardPage />}
+                />
+
+                <Route
                     path="/stations"
                     element={<StationPage />}
                 />
@@ -36,27 +41,22 @@ function App() {
 
                 <Route
                     path="/lines"
-                    element={<LinePage />}    
+                    element={<LinePage />}
                 />
 
-                <Route 
-                    path="/schedules" 
-                    element={<SchedulePage />} 
+                <Route
+                    path="/schedules"
+                    element={<SchedulePage />}
                 />
 
-                <Route 
-                    path="/tickets" 
-                    element={<TicketPage />} 
+                <Route
+                    path="/tickets"
+                    element={<TicketPage />}
                 />
 
                 <Route
                     path="*"
                     element={<NotFoundPage />}
-                />
-
-                <Route
-                    path="/dashboard"
-                    element={<DashboardPage />}
                 />
 
             </Route>

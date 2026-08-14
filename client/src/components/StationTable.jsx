@@ -1,106 +1,160 @@
 function StationTable({
     stations,
-    handleEdit,
 
+    handleEdit,
     handleDelete,
 
     handleNextPage,
-
     handlePreviousPage,
 
     currentPage,
-
     totalPages
 }) {
     return (
-        <div>
-            <table border="1" cellPadding="8">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tên ga</th>
-                        <th>Địa chỉ</th>
-                        <th>Tuyến</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
+        <div className="page-section">
 
-                <tbody>
+            <h2 className="section-title">
+                Danh sách ga
+            </h2>
 
-                    {stations.length === 0 ? (
+
+            {/* ==========================
+                TABLE
+            ========================== */}
+
+            <div className="table-container">
+
+                <table className="data-table">
+
+                    <thead>
 
                         <tr>
-                            <td colSpan="4">
-                                Không có dữ liệu
-                            </td>
+
+                            <th>ID</th>
+
+                            <th>Tên ga</th>
+
+                            <th>Địa chỉ</th>
+
+                            <th>Tuyến</th>
+
+                            <th>Hành động</th>
+
                         </tr>
 
-                    ) : (
+                    </thead>
 
-                        stations.map((station) => (
 
-                            <tr key={station.StationID}>
+                    <tbody>
 
-                                <td>{station.StationID}</td>
+                        {stations.length === 0 ? (
 
-                                <td>{station.StationName}</td>
+                            <tr>
 
-                                <td>{station.Address}</td>
-
-                                <td>{station.LineName}</td>
-
-                                <td>
-
-                                    <button
-                                        onClick={() =>
-                                            handleEdit(station)
-                                        }
-                                    >
-                                        Sửa
-                                    </button>
-
-                                    {" "}
-
-                                    <button
-                                        onClick={() =>
-                                            handleDelete(
-                                                station.StationID
-                                            )
-                                        }
-                                    >
-                                        Xóa
-                                    </button>
-
+                                <td colSpan="5">
+                                    Không có dữ liệu
                                 </td>
 
                             </tr>
 
-                        ))
+                        ) : (
 
-                    )}
+                            stations.map((station) => (
 
-                </tbody>
+                                <tr key={station.StationID}>
 
-            </table>
-            <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-            >
-                Previous
-            </button>
+                                    <td>
+                                        {station.StationID}
+                                    </td>
 
-            <span>
+                                    <td>
+                                        {station.StationName}
+                                    </td>
 
-                Trang {currentPage} / {totalPages}
+                                    <td>
+                                        {station.Address}
+                                    </td>
 
-            </span>
+                                    <td>
+                                        {station.LineName || "Chưa có tuyến"}
+                                    </td>
 
-            <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-            >
-                Next
-            </button>
+                                    <td>
+
+                                        <div className="table-actions">
+
+                                            <button
+                                                className="btn btn-edit"
+                                                onClick={() =>
+                                                    handleEdit(station)
+                                                }
+                                            >
+                                                Sửa
+                                            </button>
+
+
+                                            <button
+                                                className="btn btn-delete"
+                                                onClick={() =>
+                                                    handleDelete(
+                                                        station.StationID
+                                                    )
+                                                }
+                                            >
+                                                Xóa
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+
+                            ))
+
+                        )}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {/* ==========================
+                PAGINATION
+            ========================== */}
+
+            <div className="pagination">
+
+                <button
+                    className="btn btn-secondary"
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+
+
+                <span className="pagination-info">
+
+                    Trang {currentPage} / {totalPages}
+
+                </span>
+
+
+                <button
+                    className="btn btn-secondary"
+                    onClick={handleNextPage}
+                    disabled={
+                        currentPage === totalPages ||
+                        totalPages === 0
+                    }
+                >
+                    Next
+                </button>
+
+            </div>
 
         </div>
     );

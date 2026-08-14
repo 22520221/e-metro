@@ -75,7 +75,7 @@ function Navbar() {
                         isActive ? "navbar-link active" : "navbar-link"
                     }
                 >
-                    Dashboards
+                    Dashboard
                 </NavLink>
 
             </div>

@@ -140,49 +140,47 @@ function handleEdit(line) {
 
     async function handleUpdateLine() {
 
-        const validationError = validateLine();
+    if (!lineName || !lineColor) {
+        alert("Vui lòng nhập đầy đủ thông tin.");
+        return;
+    }
 
-        if (validationError) {
-            setError(validationError);
-            return;
-        }
+    if (!lineName.trim() || !lineColor.trim()) {
+        alert("Vui lòng nhập đầy đủ thông tin.");
+        return;
+    }
 
-        if (editingId === null) {
-            setError("Không xác định được tuyến cần cập nhật.");
-            return;
-        }
+    setIsLoading(true);
+    setError("");
 
-        setIsLoading(true);
-        setError("");
+    try {
 
-        try {
+        const result = await updateLine(
+            editingId,
+            lineName.trim(),
+            lineColor.trim()
+        );
 
-            const result = await updateLine(
-                editingId,
-                lineName,
-                lineColor
-            );
+        alert(result.message);
 
-            alert(result.message);
+        await loadLines();
 
-            await loadLines();
+        setLineName("");
+        setLineColor("");
+        setEditingId(null);
 
-            setLineName("");
-            setLineColor("");
+    } catch (err) {
 
-            setEditingId(null);
+        console.error(err);
 
-        } catch (err) {
+        setError(err.message);
 
-            setError(err.message);
+    } finally {
 
-        } finally {
-
-            setIsLoading(false);
-
-        }
+        setIsLoading(false);
 
     }
+}
 
     async function handleDeleteLine(id) {
 

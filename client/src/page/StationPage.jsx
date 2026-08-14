@@ -11,6 +11,7 @@ import {
 } from "../services/stationService";
 
 import { getLines } from "../services/lineService";
+import "../styles/common.css";
 
 
 function Stationpage(){
@@ -299,18 +300,20 @@ function handleSortChange(value) {
 // ==========================
 
     return (
-        <div>
+        <div className="page-container">
 
-            <h1>Danh sách ga Metro</h1>
+            <h1 className="page-title">
+                Danh sách ga Metro
+            </h1>
 
             {
                 error && (
-                    <p style={{ color: "red" }}>
+                    <div className="error-message">
                         {error}
-                    </p>
-                )
+                    </div>
+                    )
             }
-
+            
             <StationForm
                 stationName={stationName}
                 setStationName={setStationName}

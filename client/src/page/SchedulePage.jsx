@@ -40,6 +40,13 @@ function SchedulePage(){
     
     const [error, setError] = useState("");
 
+    const [searchTerm, setSearchTerm] = useState("");
+    const [sortOrder, setSortOrder] = useState("asc");
+
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const itemsPerPage = 5;
+
 // =========================
 // // 2. useEffect
 // ==========================
@@ -111,6 +118,18 @@ async function loadStations() {
             return;
         }
 
+        if (new Date(departureTime) <= new Date(arrivalTime)) {
+            alert("Giờ đi phải sau giờ đến.");
+            return;
+        }
+
+        const order = Number(stopOrder);
+
+        if (!Number.isInteger(order) || order <= 0) {
+            alert("Thứ tự dừng phải là số nguyên lớn hơn 0.");
+            return;
+        }
+
         setIsLoading(true);
         setError("");
 
@@ -158,6 +177,18 @@ async function loadStations() {
 
         if (!trainId || !stationId || !arrivalTime || !departureTime || !stopOrder) {
             alert("Vui lòng nhập đầy đủ thông tin.");
+            return;
+        }
+
+        if (new Date(departureTime) <= new Date(arrivalTime)) {
+            alert("Giờ đi phải sau giờ đến.");
+            return;
+        }
+
+        const order = Number(stopOrder);
+
+        if (!Number.isInteger(order) || order <= 0) {
+            alert("Thứ tự dừng phải là số nguyên lớn hơn 0.");
             return;
         }
 
@@ -284,6 +315,40 @@ function handleSortChange(value) {
 
 }
 
+    const filteredSchedules = schedules
+    .filter((schedule) =>
+        schedule.TrainName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+        schedule.StationName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+
+        if (sortOrder === "asc") {
+            return a.ScheduleID - b.ScheduleID;
+        }
+
+        return b.ScheduleID - a.ScheduleID;
+    });
+
+const totalPages = Math.max(
+    1,
+    Math.ceil(filteredSchedules.length / itemsPerPage)
+);
+
+const startIndex =
+    (currentPage - 1) * itemsPerPage;
+
+const endIndex =
+    startIndex + itemsPerPage;
+
+const currentSchedules =
+    filteredSchedules.slice(
+        startIndex,
+        endIndex
+    );
 
     return (
         <div>
@@ -322,13 +387,25 @@ function handleSortChange(value) {
                 handleUpdateSchedule={handleUpdateSchedule}
 
                 isLoading={isLoading}
+
+                searchTerm={searchTerm}
+                handleSearchChange={handleSearchChange}
+
+                sortOrder={sortOrder}
+                handleSortChange={handleSortChange}
             />
 
             <ScheduleTable
-                schedules={schedules}
+                schedules={currentSchedules}
 
                 handleEdit={handleEdit}
                 handleDeleteSchedule={handleDeleteSchedule}
+
+                handleNextPage={handleNextPage}
+                handlePreviousPage={handlePreviousPage}
+
+                currentPage={currentPage}
+                totalPages={totalPages}
             />
         </div>
     );

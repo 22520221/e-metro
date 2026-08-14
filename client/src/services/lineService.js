@@ -17,8 +17,8 @@ async function addLine(LineName, LineColor) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            LineName,
-            LineColor
+            lineName: LineName,
+            lineColor: LineColor
         }),
     });
 
@@ -37,8 +37,8 @@ async function updateLine(id, LineName, LineColor) {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            LineName,
-            LineColor,
+            lineName: LineName,
+            lineColor: LineColor,
         }),
     });
 
