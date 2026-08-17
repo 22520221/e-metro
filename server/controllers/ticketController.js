@@ -16,10 +16,86 @@ async function getTickets(req, res) {
     }
 }
 
+    function validateTicketData(
+    scheduleID,
+    passengerName,
+    seatNumber,
+    price,
+    status
+) {
+    if (!scheduleID) {
+        return "Vui lòng chọn lịch chạy.";
+    }
+
+    if (
+        typeof passengerName !== "string" ||
+        passengerName.trim() === ""
+    ) {
+        return "Tên hành khách không được để trống.";
+    }
+
+    if (
+        typeof seatNumber !== "string" ||
+        seatNumber.trim() === ""
+    ) {
+        return "Số ghế không được để trống.";
+    }
+
+    if (
+        price === "" ||
+        price === null ||
+        price === undefined ||
+        Number.isNaN(Number(price)) ||
+        Number(price) <= 0
+    ) {
+        return "Giá vé phải lớn hơn 0.";
+    }
+
+    const validStatuses = [
+        "Booked",
+        "Cancelled",
+        "Used"
+    ];
+
+    if (!validStatuses.includes(status)) {
+        return "Trạng thái vé không hợp lệ.";
+    }
+
+    return null;
+}
+
 async function addTicket(req, res) {
     try {
 
         const { scheduleID, passengerName, seatNumber, price, status } = req.body;
+
+        const validationError = validateTicketData(
+            scheduleID,
+            passengerName,
+            seatNumber,
+            price,
+            status
+        );
+
+        if (validationError) {
+            return res.status(400).json({
+                error: validationError
+            });
+        }
+
+        const seatExists =
+            await ticketService.checkSeatAvailable(
+                scheduleID,
+                seatNumber
+            );
+
+        if (seatExists) {
+
+            return res.status(400).json({
+                error: "Số ghế này đã được đặt cho lịch chạy."
+            });
+
+        }
 
         await ticketService.addTicket(
             scheduleID, 
@@ -43,24 +119,67 @@ async function addTicket(req, res) {
 }
 
 async function updateTicket(req, res) {
+
     try {
 
-        const { id } = req.params;
+        const id = Number(req.params.id);
 
-        const { scheduleID, 
-            passengerName, 
-            seatNumber, 
-            price, 
-            status } = req.body;
+        const {
+            scheduleID,
+            passengerName,
+            seatNumber,
+            price,
+            status
+        } = req.body;
+
+        const validationError = validateTicketData(
+            scheduleID,
+            passengerName,
+            seatNumber,
+            price,
+            status
+        );
+
+        if (validationError) {
+            return res.status(400).json({
+                error: validationError
+            });
+        }
+
+        if (!Number.isInteger(id)) {
+
+            return res.status(400).json({
+                error: "TicketID không hợp lệ."
+            });
+
+        }
+
+        const seatExists =
+            await ticketService.checkSeatAvailable(
+                scheduleID,
+                seatNumber,
+                id
+            );
+
+
+        if (seatExists) {
+
+            return res.status(400).json({
+                error: "Số ghế này đã được đặt cho lịch chạy."
+            });
+
+        }
+
 
         await ticketService.updateTicket(
             id,
-            scheduleID, 
-            passengerName, 
-            seatNumber, 
-            price, 
+            scheduleID,
+            passengerName,
+            seatNumber,
+            price,
             status
         );
+
 
         res.json({
             message: "Cập nhật vé thành công!"
@@ -73,6 +192,7 @@ async function updateTicket(req, res) {
         });
 
     }
+
 }
 
 async function deleteTicket(req, res) {

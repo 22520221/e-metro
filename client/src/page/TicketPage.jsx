@@ -256,11 +256,14 @@ function TicketPage() {
     // 5. Search + Sort
     // ==========================
 
+    const keyword = searchTerm.toLowerCase();
+
     const filteredTickets = tickets
         .filter((ticket) =>
-            ticket.PassengerName
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase())
+            ticket.PassengerName?.toLowerCase().includes(keyword) ||
+            ticket.SeatNumber?.toLowerCase().includes(keyword) ||
+            ticket.TrainName?.toLowerCase().includes(keyword) ||
+            ticket.StationName?.toLowerCase().includes(keyword)
         )
         .sort((a, b) => {
 
@@ -291,8 +294,9 @@ function TicketPage() {
         endIndex
     );
 
-    const totalPages = Math.ceil(
-        filteredTickets.length / itemsPerPage
+    const totalPages = Math.max(
+        1,
+    Math.ceil(filteredTickets.length / itemsPerPage)
     );
 
     function handleSearchChange(value) {

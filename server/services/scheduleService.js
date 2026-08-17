@@ -5,15 +5,16 @@ async function getSchedules() {
 
     const result = await sql.query`
     SELECT
-        s.*,
-        t.TrainName,
+        sc.*,
+        tr.TrainName,
+        tr.Capacity,
         st.StationName
-    FROM Schedule s
-    LEFT JOIN Train t
-        ON s.TrainID = t.TrainID
-    LEFT JOIN Station st
-        ON s.StationID = st.StationID
-    ORDER BY s.ScheduleID
+    FROM Schedule sc
+        INNER JOIN Train tr
+            ON sc.TrainID = tr.TrainID
+        INNER JOIN Station st
+            ON sc.StationID = st.StationID
+    ORDER BY sc.ScheduleID
 `;
 
     return result.recordset;
@@ -23,17 +24,8 @@ async function addSchedule(trainID, stationID, arrivalTime, departureTime, stopO
 
     await sql.connect(config);
 
-    console.log(trainID);
-    console.log(stationID);
-    console.log(arrivalTime);
-    console.log(departureTime);
-    console.log(stopOrder);
-
     const arrival = new Date(arrivalTime);
     const departure = new Date(departureTime);
-
-    console.log(arrival);
-    console.log(departure);
 
     await sql.query`
         INSERT INTO Schedule
