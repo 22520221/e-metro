@@ -7,7 +7,7 @@ import {
     getTickets,
     addTicket,
     updateTicket,
-    deleteTicket,
+    cancelTicket,
 } from "../services/ticketService";
 
 import { getSchedules } from "../services/scheduleService";
@@ -220,37 +220,37 @@ function TicketPage() {
 
     }
 
-    async function handleDeleteTicket(id) {
+    async function handleCancelTicket(id) {
 
-        const confirmDelete = window.confirm(
-            "Bạn có chắc muốn xóa vé này?"
-        );
+    const confirmCancel = window.confirm(
+        "Bạn có chắc muốn hủy vé này?"
+    );
 
-        if (!confirmDelete) return;
+    if (!confirmCancel) {
+        return;
+    }
 
-        setIsLoading(true);
+    setIsLoading(true);
+    setError("");
 
-        setError("");
+    try {
 
-        try {
+        const result = await cancelTicket(id);
 
-            const result = await deleteTicket(id);
+        alert(result.message);
 
-            alert(result.message);
+        await loadTickets();
 
-            await loadTickets();
+    } catch (err) {
 
-        } catch (err) {
+        setError(err.message);
 
-            setError(err.message);
+    } finally {
 
-        } finally {
-
-            setIsLoading(false);
-
-        }
+        setIsLoading(false);
 
     }
+}
 
     // ==========================
     // 5. Search + Sort
@@ -398,8 +398,7 @@ function TicketPage() {
                 handlePreviousPage={handlePreviousPage}
 
                 handleEdit={handleEdit}
-
-                handleDeleteTicket={handleDeleteTicket}
+                handleCancelTicket={handleCancelTicket}
 
             />
 

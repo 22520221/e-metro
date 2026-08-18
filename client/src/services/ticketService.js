@@ -56,22 +56,21 @@ async function updateTicket(id, scheduleID, passengerName, seatNumber, price, st
     return await response.json();
 }
 
-async function deleteTicket(id) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "DELETE",
-    });
+async function cancelTicket(id) { 
+    const response = await fetch( `${API_URL}/${id}/cancel`, { 
+        method: "PUT", } ); 
 
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Xóa vé thất bại");
-    }
+        if (!response.ok) { 
+            const error = await response.json(); 
+            throw new Error( error.error || "Hủy vé thất bại" ); 
+        }
 
-    return await response.json();
+        return await response.json(); 
 }
 
 export {
     getTickets,
     addTicket,
     updateTicket,
-    deleteTicket,
-};
+    cancelTicket
+}

@@ -205,6 +205,49 @@ async function addTicket(
     `;
 }
 
+    async function checkTicketStatusChange(id, newStatus) {
+
+    await sql.connect(config);
+
+    const result = await sql.query`
+        SELECT Status
+        FROM Ticket
+        WHERE TicketID = ${id}
+    `;
+
+    if (result.recordset.length === 0) {
+        throw new Error("Vé không tồn tại.");
+    }
+
+    const currentStatus = result.recordset[0].Status;
+
+    // Không thay đổi trạng thái
+    if (currentStatus === newStatus) {
+        return true;
+    }
+
+    // Booked → Used
+    if (
+        currentStatus === "Booked" &&
+        newStatus === "Used"
+    ) {
+        return true;
+    }
+
+    // Booked → Cancelled
+    if (
+        currentStatus === "Booked" &&
+        newStatus === "Cancelled"
+    ) {
+        return true;
+    }
+
+    // Các trường hợp còn lại không cho phép
+    throw new Error(
+        `Không thể chuyển trạng thái từ ${currentStatus} sang ${newStatus}.`
+    );
+}
+
 async function updateTicket(
     id,
     scheduleID,
@@ -232,11 +275,10 @@ async function updateTicket(
     `;
 }
 
-async function deleteTicket(id) {
+async function cancelTicket(id) {
 
     await sql.connect(config);
 
-    // Kiểm tra vé có tồn tại không
     const ticketResult = await sql.query`
         SELECT Status
         FROM Ticket
@@ -247,17 +289,21 @@ async function deleteTicket(id) {
         throw new Error("Vé không tồn tại.");
     }
 
-    const status = ticketResult.recordset[0].Status;
+    const currentStatus = ticketResult.recordset[0].Status;
 
-    // Không cho xóa vé đã sử dụng
-    if (status === "Used") {
+    if (currentStatus === "Cancelled") {
+        throw new Error("Vé này đã được hủy.");
+    }
+
+    if (currentStatus === "Used") {
         throw new Error(
-            "Không thể xóa vé đã được sử dụng."
+            "Không thể hủy vé đã được sử dụng."
         );
     }
 
     await sql.query`
-        DELETE FROM Ticket
+        UPDATE Ticket
+        SET Status = 'Cancelled'
         WHERE TicketID = ${id}
     `;
 }
@@ -266,6 +312,7 @@ module.exports = {
     getTickets,
     addTicket,
     updateTicket,
-    deleteTicket,
-    checkSeatAvailable
+    cancelTicket,
+    checkSeatAvailable,
+    checkTicketStatusChange
 };

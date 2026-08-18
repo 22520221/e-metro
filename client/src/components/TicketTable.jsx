@@ -1,9 +1,12 @@
 function TicketTable({
     tickets,
+
     handleEdit,
-    handleDeleteTicket,
+    handleCancelTicket,
+
     currentPage,
     totalPages,
+
     handleNextPage,
     handlePreviousPage,
 }) {
@@ -72,7 +75,11 @@ function TicketTable({
                                         </td>
 
                                         <td>
-                                            {ticket.TrainName}
+                                            <span 
+                                                className=
+                                                {`status-badge status-${ticket.Status.toLowerCase()}`}>
+                                                {ticket.Status}
+                                            </span>
                                         </td>
 
                                         <td>
@@ -102,26 +109,37 @@ function TicketTable({
 
                                             <div className="table-actions">
 
+                                                {ticket.Status === "Booked" && (
+                                                <>
                                                 <button
                                                     className="btn btn-edit"
-                                                    onClick={() =>
-                                                        handleEdit(ticket)
-                                                    }
+                                                    onClick={() => handleEdit(ticket)}
                                                 >
                                                     Sửa
                                                 </button>
 
-
                                                 <button
                                                     className="btn btn-delete"
                                                     onClick={() =>
-                                                        handleDeleteTicket(
-                                                            ticket.TicketID
-                                                        )
-                                                    }
+                                                    handleCancelTicket(ticket.TicketID)
+                                                }
                                                 >
-                                                    Xóa
+                                                    Hủy vé
                                                 </button>
+                                                </>
+                                                )}
+
+                                                {ticket.Status === "Used" && (
+                                                    <span>
+                                                        Đã sử dụng
+                                                    </span>
+                                                )}
+
+                                                {ticket.Status === "Cancelled" && (
+                                                    <span>
+                                                        Đã hủy
+                                                    </span>
+                                                )}
 
                                             </div>
 

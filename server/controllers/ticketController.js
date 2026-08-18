@@ -170,6 +170,10 @@ async function updateTicket(req, res) {
 
         }
 
+        await ticketService.checkTicketStatusChange(
+            id,
+            status
+        );
 
         await ticketService.updateTicket(
             id,
@@ -195,29 +199,31 @@ async function updateTicket(req, res) {
 
 }
 
-async function deleteTicket(req, res) {
+    async function cancelTicket(req, res) {
+
     try {
 
         const { id } = req.params;
 
-        await ticketService.deleteTicket(id);
+        await ticketService.cancelTicket(id);
 
         res.json({
-            message: "Xóa vé thành công!"
+            message: "Hủy vé thành công!"
         });
 
     } catch (err) {
 
-        res.status(500).json({
+        res.status(400).json({
             error: err.message
         });
 
     }
+
 }
 
 module.exports = {
     getTickets,
     addTicket,
     updateTicket,
-    deleteTicket
+    cancelTicket
 };
