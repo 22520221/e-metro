@@ -1,9 +1,14 @@
 const stationService = require("../services/stationService");
 
+// =====================================================
+// GET
+// =====================================================
 async function getStations(req, res) {
+
     try {
 
-        const stations = await stationService.getAllStations();
+        const stations =
+            await stationService.getAllStations();
 
         res.json(stations);
 
@@ -14,12 +19,23 @@ async function getStations(req, res) {
         });
 
     }
+
 }
 
+
+// =====================================================
+// ADD
+// =====================================================
 async function addStation(req, res) {
+
     try {
 
-        const { stationName, address, lineId } = req.body;
+        const {
+            stationName,
+            address,
+            lineId
+        } = req.body;
+
 
         await stationService.addStation(
             stationName,
@@ -27,25 +43,38 @@ async function addStation(req, res) {
             lineId
         );
 
-        res.json({
+
+        res.status(201).json({
             message: "Thêm ga thành công!"
         });
 
     } catch (err) {
 
-        res.status(500).json({
+        res.status(400).json({
             error: err.message
         });
 
     }
+
 }
 
+
+// =====================================================
+// UPDATE
+// =====================================================
 async function updateStation(req, res) {
+
     try {
 
-        const { id } = req.params;
+        const id =
+            Number(req.params.id);
 
-        const { stationName, address, lineId } = req.body;
+        const {
+            stationName,
+            address,
+            lineId
+        } = req.body;
+
 
         await stationService.updateStation(
             id,
@@ -54,25 +83,35 @@ async function updateStation(req, res) {
             lineId
         );
 
+
         res.json({
             message: "Cập nhật ga thành công!"
         });
 
     } catch (err) {
 
-        res.status(500).json({
+        res.status(400).json({
             error: err.message
         });
 
     }
+
 }
 
+
+// =====================================================
+// DELETE
+// =====================================================
 async function deleteStation(req, res) {
+
     try {
 
-        const { id } = req.params;
+        const id =
+            Number(req.params.id);
+
 
         await stationService.deleteStation(id);
+
 
         res.json({
             message: "Xóa ga thành công!"
@@ -80,11 +119,12 @@ async function deleteStation(req, res) {
 
     } catch (err) {
 
-        res.status(500).json({
+        res.status(400).json({
             error: err.message
         });
 
     }
+
 }
 
 module.exports = {

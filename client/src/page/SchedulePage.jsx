@@ -8,7 +8,7 @@ import {
     addSchedule,
     updateSchedule,
     deleteSchedule
-} from "../services/ScheduleService";
+} from "../services/scheduleService";
 
 import { getTrains } from "../services/trainService";
 
@@ -143,6 +143,17 @@ async function loadStations() {
                 stopOrder
             });
 
+            console.log("arrivalTime:", arrivalTime);
+            console.log("departureTime:", departureTime);
+            console.log(
+                "arrival Date:",
+                new Date(arrivalTime).toISOString()
+            );
+            console.log(
+                "departure Date:",
+                new Date(departureTime).toISOString()
+            );
+
             const result = await addSchedule(
                 trainId, 
                 stationId, 
@@ -157,7 +168,7 @@ async function loadStations() {
 
             setTrainId("");
             setStationId("");
-            setaArrivalTime("");
+            setArrivalTime("");
             setDepartureTime("");
             setStopOrder("");
 

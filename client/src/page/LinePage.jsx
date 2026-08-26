@@ -240,10 +240,10 @@ function handleEdit(line) {
     .sort((a, b) => {
 
         if (sortOrder === "asc") {
-            return a.LineName.localeCompare(b.LineName);
+            return a.LineID - b.LineID;
         }
 
-        return b.LineName.localeCompare(a.LineName);
+        return b.LineID - a.LineID;
     });
 
 // ==========================

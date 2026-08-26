@@ -268,17 +268,10 @@ function TicketPage() {
         .sort((a, b) => {
 
             if (sortOrder === "asc") {
-
-                return a.PassengerName.localeCompare(
-                    b.PassengerName
-                );
-
+                return a.TicketID - b.TicketID;
             }
 
-            return b.PassengerName.localeCompare(
-                a.PassengerName
-            );
-
+            return b.TicketID - a.TicketID;
         });
 
     // ==========================
@@ -356,6 +349,7 @@ function TicketPage() {
             <TicketForm
 
                 schedules={schedules}
+                tickets={tickets}
 
                 scheduleId={scheduleId}
                 setScheduleId={setScheduleId}

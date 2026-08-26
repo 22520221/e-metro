@@ -11,6 +11,15 @@ function ScheduleTable({
     totalPages,
 }) {
 
+    function formatDateTime(value) {
+        if (!value) return "";
+
+        return String(value)
+            .replace("T", " ")
+            .replace("Z", "")
+            .slice(0, 16);
+    }
+
     return (
         <div className="page-section">
 
@@ -75,15 +84,11 @@ function ScheduleTable({
                                     </td>
 
                                     <td>
-                                        {new Date(
-                                            schedule.ArrivalTime
-                                        ).toLocaleString("vi-VN")}
+                                        {formatDateTime(schedule.ArrivalTime)}
                                     </td>
 
                                     <td>
-                                        {new Date(
-                                            schedule.DepartureTime
-                                        ).toLocaleString("vi-VN")}
+                                        {formatDateTime(schedule.DepartureTime)}
                                     </td>
 
                                     <td>

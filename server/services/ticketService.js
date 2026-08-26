@@ -109,17 +109,6 @@ async function getTickets() {
 
     const seatIndex = getSeatIndex(seat);
 
-    // Kiểm tra format ghế: A01, A02, B05...
-    const match = seat.match(/^[A-Z](\d{2})$/);
-
-    if (!match) {
-        throw new Error(
-            "Số ghế không hợp lệ. Ví dụ hợp lệ: A01, A02, B05."
-        );
-    }
-
-    const seatNumberPart = Number(match[1]);
-
     // Kiểm tra ghế không vượt quá Capacity
     if (seatIndex > capacity) {
         throw new Error(
@@ -172,6 +161,100 @@ async function getTickets() {
 
 }
 
+async function checkCapacity(
+    scheduleID,
+    excludeTicketID = null
+) {
+
+    await sql.connect(config);
+
+    const scheduleResult = await sql.query`
+        SELECT
+            tr.Capacity
+        FROM Schedule sc
+        INNER JOIN Train tr
+            ON sc.TrainID = tr.TrainID
+        WHERE sc.ScheduleID = ${scheduleID}
+    `;
+
+    if (scheduleResult.recordset.length === 0) {
+        throw new Error(
+            "Lịch chạy không tồn tại."
+        );
+    }
+
+    const capacity =
+        Number(scheduleResult.recordset[0].Capacity);
+
+    let ticketResult;
+
+    if (excludeTicketID === null) {
+
+        ticketResult = await sql.query`
+            SELECT COUNT(*) AS BookedCount
+            FROM Ticket
+            WHERE ScheduleID = ${scheduleID}
+            AND Status IN ('Booked', 'Paid', 'Used')
+        `;
+
+    } else {
+
+        ticketResult = await sql.query`
+            SELECT COUNT(*) AS BookedCount
+            FROM Ticket
+            WHERE ScheduleID = ${scheduleID}
+            AND TicketID <> ${Number(excludeTicketID)}
+            AND Status IN ('Booked', 'Paid', 'Used')
+        `;
+
+    }
+
+    const bookedCount =
+        Number(ticketResult.recordset[0].BookedCount);
+
+    if (bookedCount >= capacity) {
+
+        throw new Error(
+            "Tàu đã hết chỗ."
+        );
+
+    }
+
+    return {
+        capacity,
+        bookedCount,
+        availableCount: capacity - bookedCount
+    };
+}
+
+async function checkScheduleCanBook(scheduleID) {
+
+    await sql.connect(config);
+
+    const result = await sql.query`
+        SELECT DepartureTime
+        FROM Schedule
+        WHERE ScheduleID = ${scheduleID}
+    `;
+
+    if (result.recordset.length === 0) {
+        throw new Error("Lịch chạy không tồn tại.");
+    }
+
+    const departureTime =
+        new Date(result.recordset[0].DepartureTime);
+
+    const now = new Date();
+
+    if (departureTime <= now) {
+        throw new Error(
+            "Không thể đặt vé cho chuyến đã khởi hành."
+        );
+    }
+
+    return true;
+}
+
 async function addTicket(
     scheduleID,
     passengerName,
@@ -181,6 +264,8 @@ async function addTicket(
 ) {
 
     await sql.connect(config);
+
+    await checkScheduleCanBook(scheduleID);
 
     await sql.query`
 
@@ -234,14 +319,14 @@ async function addTicket(
         return true;
     }
 
-    // Booked → Cancelled
+    // Paid → Used
     if (
-        currentStatus === "Booked" &&
-        newStatus === "Cancelled"
+        currentStatus === "Paid" &&
+        newStatus === "Used"
     ) {
         return true;
     }
-
+        
     // Các trường hợp còn lại không cho phép
     throw new Error(
         `Không thể chuyển trạng thái từ ${currentStatus} sang ${newStatus}.`
@@ -258,6 +343,42 @@ async function updateTicket(
 ) {
 
     await sql.connect(config);
+
+    const ticketResult = await sql.query`
+        SELECT Status
+        FROM Ticket
+        WHERE TicketID = ${id}
+    `;
+
+    if (ticketResult.recordset.length === 0) {
+        throw new Error("Vé không tồn tại.");
+    }
+
+    const currentStatus =
+        ticketResult.recordset[0].Status;
+
+    // Kiểm tra chuyển trạng thái
+    await checkTicketStatusChange(
+        id,
+        status
+    );
+
+    // Used / Cancelled không được chỉnh sửa
+    if (
+        currentStatus === "Used" ||
+        currentStatus === "Cancelled"
+    ) {
+        throw new Error(
+            `Không thể sửa vé có trạng thái ${currentStatus}.`
+        );
+    }
+
+    // Kiểm tra sức chứa của Schedule mới
+    // Loại trừ chính Ticket đang được sửa
+    await checkCapacity(
+        scheduleID,
+        id
+    );
 
     await sql.query`
 
@@ -314,5 +435,7 @@ module.exports = {
     updateTicket,
     cancelTicket,
     checkSeatAvailable,
-    checkTicketStatusChange
+    checkTicketStatusChange,
+    checkCapacity,
+    checkScheduleCanBook
 };

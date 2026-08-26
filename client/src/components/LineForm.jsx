@@ -126,11 +126,11 @@ function LineForm({
                     >
 
                         <option value="asc">
-                            A → Z
+                            ID tăng dần
                         </option>
 
                         <option value="desc">
-                            Z → A
+                            ID giảm dần
                         </option>
 
                     </select>

@@ -1,5 +1,8 @@
+import SeatMap from "./SeatMap";
+
 function TicketForm({
     schedules,
+    tickets,
 
     scheduleId,
     setScheduleId,
@@ -30,6 +33,35 @@ function TicketForm({
     isLoading,
 }) {
 
+    const selectedSchedule = schedules.find(
+        (schedule) =>
+            String(schedule.ScheduleID) === String(scheduleId)
+    );
+
+    const capacity = selectedSchedule?.Capacity || 0;
+
+    const scheduleTickets = tickets.filter(
+        (ticket) =>
+            String(ticket.ScheduleID) === String(scheduleId)
+    );
+
+    const bookedCount = scheduleTickets.filter(
+        (ticket) =>
+            ticket.Status === "Booked" ||
+            ticket.Status === "Paid"
+    ).length;
+
+    const usedCount = scheduleTickets.filter(
+        (ticket) =>
+            ticket.Status === "Used"
+    ).length;
+
+    const availableCount =
+        Math.max(
+            0,
+            capacity - bookedCount - usedCount
+        );
+    
     return (
 
         <div className="page-section">
@@ -94,7 +126,6 @@ function TicketForm({
 
                 </div>
 
-
                 {/* Tên hành khách */}
 
                 <div className="form-group">
@@ -115,26 +146,52 @@ function TicketForm({
 
                 </div>
 
+                {/* Thống kê ghế */}
 
-                {/* Số ghế */}
+{
+    scheduleId && selectedSchedule && (
 
-                <div className="form-group">
+        <div className="seat-statistics">
 
-                    <label className="form-label">
-                        Số ghế
-                    </label>
+            <div className="seat-stat-item">
+                <span>Tổng ghế</span>
+                <strong>{capacity}</strong>
+            </div>
 
-                    <input
-                        className="form-input"
-                        type="text"
-                        placeholder="Nhập số ghế"
-                        value={seatNumber}
-                        onChange={(e) =>
-                            setSeatNumber(e.target.value)
-                        }
-                    />
+            <div className="seat-stat-item">
+                <span>Đã đặt</span>
+                <strong>{bookedCount}</strong>
+            </div>
 
-                </div>
+            <div className="seat-stat-item">
+                <span>Đã sử dụng</span>
+                <strong>{usedCount}</strong>
+            </div>
+
+            <div className="seat-stat-item">
+                <span>Còn trống</span>
+                <strong>{availableCount}</strong>
+            </div>
+
+        </div>
+
+    )
+}
+
+
+{/* SeatMap */}
+
+<div className="form-group">
+
+    <SeatMap
+        tickets={tickets}
+        scheduleId={scheduleId}
+        seatNumber={seatNumber}
+        setSeatNumber={setSeatNumber}
+        editingId={editingId}
+    />
+
+</div>
 
 
                 {/* Giá vé */}
@@ -255,11 +312,11 @@ function TicketForm({
                 >
 
                     <option value="asc">
-                        A → Z
+                        ID tăng dần
                     </option>
 
                     <option value="desc">
-                        Z → A
+                        ID giảm dần
                     </option>
 
                 </select>

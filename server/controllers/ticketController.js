@@ -16,12 +16,11 @@ async function getTickets(req, res) {
     }
 }
 
-    function validateTicketData(
+function validateTicketData(
     scheduleID,
     passengerName,
     seatNumber,
-    price,
-    status
+    price
 ) {
     if (!scheduleID) {
         return "Vui lòng chọn lịch chạy.";
@@ -51,14 +50,13 @@ async function getTickets(req, res) {
         return "Giá vé phải lớn hơn 0.";
     }
 
-    const validStatuses = [
-        "Booked",
-        "Cancelled",
-        "Used"
-    ];
+    return null;
+}
 
-    if (!validStatuses.includes(status)) {
-        return "Trạng thái vé không hợp lệ.";
+function validateNewTicketStatus(status) {
+
+    if (status !== "Booked") {
+        return "Khi tạo vé, trạng thái phải là Booked.";
     }
 
     return null;
@@ -74,7 +72,6 @@ async function addTicket(req, res) {
             passengerName,
             seatNumber,
             price,
-            status
         );
 
         if (validationError) {
@@ -83,19 +80,37 @@ async function addTicket(req, res) {
             });
         }
 
+        const statusError = validateNewTicketStatus(status);
+
+if (statusError) {
+    return res.status(400).json({
+        error: statusError
+    });
+}
+
+        // ==========================
+        // 1. Kiểm tra sức chứa
+        // ==========================
+
+        await ticketService.checkCapacity(scheduleID);
+
+        // ==========================
+        // 2. Kiểm tra ghế
+        // ==========================
+
         const seatExists =
             await ticketService.checkSeatAvailable(
                 scheduleID,
                 seatNumber
             );
 
-        if (seatExists) {
+            if (seatExists) {
 
-            return res.status(400).json({
-                error: "Số ghế này đã được đặt cho lịch chạy."
-            });
+                return res.status(400).json({
+                    error: "Số ghế này đã được đặt cho lịch chạy."
+                });
 
-        }
+            }
 
         await ticketService.addTicket(
             scheduleID, 
@@ -111,7 +126,7 @@ async function addTicket(req, res) {
 
     } catch (err) {
 
-        res.status(500).json({
+        res.status(400).json({
             error: err.message
         });
 
@@ -161,6 +176,10 @@ async function updateTicket(req, res) {
                 id
             );
 
+        await ticketService.checkCapacity(
+            scheduleID,
+            id
+        );
 
         if (seatExists) {
 

@@ -266,19 +266,12 @@ function handleSortChange(value) {
     )
     .sort((a, b) => {
 
-        if (sortOrder === "asc") {
+    if (sortOrder === "asc") {
+        return a.StationID - b.StationID;
+    }
 
-            return a.StationName.localeCompare(
-                b.StationName
-            );
-
-        }
-
-        return b.StationName.localeCompare(
-            a.StationName
-        );
-
-    });
+    return b.StationID - a.StationID;
+});
 
     const startIndex = (currentPage - 1) * itemsPerPage;
 
