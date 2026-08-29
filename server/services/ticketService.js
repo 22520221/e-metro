@@ -255,6 +255,326 @@ async function checkScheduleCanBook(scheduleID) {
     return true;
 }
 
+async function getTicketsByRunID(runID) {
+
+    await sql.connect(config);
+
+    // Kiểm tra chuyến có tồn tại
+    const runCheck = await sql.query`
+        SELECT TOP 1 RunID
+        FROM Schedule
+        WHERE RunID = ${runID}
+    `;
+
+    if (runCheck.recordset.length === 0) {
+        throw new Error("Chuyến không tồn tại.");
+    }
+
+    // Lấy danh sách vé
+    const result = await sql.query`
+        SELECT
+            tk.TicketID,
+            tk.ScheduleID,
+            tk.PassengerName,
+            tk.SeatNumber,
+            tk.Price,
+            tk.Status,
+            tk.CreatedAt,
+            sc.RunID,
+            sc.TrainID,
+            t.TrainName
+        FROM Ticket tk
+        INNER JOIN Schedule sc
+            ON tk.ScheduleID = sc.ScheduleID
+        INNER JOIN Train t
+            ON sc.TrainID = t.TrainID
+        WHERE sc.RunID = ${runID}
+        ORDER BY tk.TicketID
+    `;
+
+    return result.recordset;
+}
+
+async function getSeatsByRunID(runID) {
+
+    await sql.connect(config);
+
+    const runCheck = await sql.query`
+        SELECT TOP 1 RunID
+        FROM Schedule
+        WHERE RunID = ${runID}
+    `;
+
+    if (runCheck.recordset.length === 0) {
+        throw new Error("Chuyến không tồn tại.");
+    }
+
+    const result = await sql.query`
+        SELECT
+            s.RunID,
+            t.TrainID,
+            t.TrainName,
+            t.Capacity,
+            tk.SeatNumber,
+            tk.Status,
+            tk.PassengerName
+
+        FROM Schedule s
+
+        INNER JOIN Train t
+            ON s.TrainID = t.TrainID
+
+        LEFT JOIN Ticket tk
+            ON s.ScheduleID = tk.ScheduleID
+            AND tk.Status <> 'Cancelled'
+
+        WHERE s.RunID = ${runID}
+
+        ORDER BY tk.SeatNumber
+    `;
+
+    const first = result.recordset[0];
+
+    const bookedSeats = result.recordset
+    .filter(row => row.SeatNumber !== null)
+    .map(row => ({
+        seatNumber: row.SeatNumber,
+        status: row.Status,
+        passengerName: row.PassengerName
+    }));
+
+return {
+    runID: first.RunID,
+    trainID: first.TrainID,
+    trainName: first.TrainName,
+    capacity: first.Capacity,
+    bookedCount: bookedSeats.length,
+    availableCount: first.Capacity - bookedSeats.length,
+    bookedSeats
+};
+}
+
+async function getTicketsByScheduleID(scheduleID) {
+
+    await sql.connect(config);
+
+    const scheduleCheck = await sql.query`
+        SELECT ScheduleID
+        FROM Schedule
+        WHERE ScheduleID = ${scheduleID}
+    `;
+
+    if (scheduleCheck.recordset.length === 0) {
+        throw new Error("Lịch chạy không tồn tại.");
+    }
+
+    const result = await sql.query`
+        SELECT
+            tk.TicketID,
+            tk.ScheduleID,
+            tk.PassengerName,
+            tk.SeatNumber,
+            tk.Price,
+            tk.Status,
+            tk.CreatedAt
+        FROM Ticket tk
+        WHERE tk.ScheduleID = ${scheduleID}
+        ORDER BY tk.TicketID
+    `;
+
+    return result.recordset;
+}
+
+async function getTicketStatisticsByRunID(runID) {
+    await sql.connect(config);
+
+    const runCheck = await sql.query`
+        SELECT DISTINCT
+            RunID,
+            TrainID
+        FROM Schedule
+        WHERE RunID = ${runID}
+    `;
+
+    if (runCheck.recordset.length === 0) {
+        throw new Error("Chuyến không tồn tại.");
+    }
+
+    const result = await sql.query`
+        SELECT
+            s.RunID,
+            t.Capacity,
+
+            COUNT(tk.TicketID) AS TotalTickets,
+
+            SUM(CASE
+                WHEN tk.Status = 'Booked' THEN 1
+                ELSE 0
+            END) AS Booked,
+
+            SUM(CASE
+                WHEN tk.Status = 'Used' THEN 1
+                ELSE 0
+            END) AS Used,
+
+            SUM(CASE
+                WHEN tk.Status = 'Cancelled' THEN 1
+                ELSE 0
+            END) AS Cancelled,
+
+            SUM(CASE
+                WHEN tk.Status IN ('Booked', 'Used') THEN 1
+                ELSE 0
+            END) AS ActiveTickets
+
+        FROM Schedule s
+
+        INNER JOIN Train t
+            ON s.TrainID = t.TrainID
+
+        LEFT JOIN Ticket tk
+            ON s.ScheduleID = tk.ScheduleID
+
+        WHERE s.RunID = ${runID}
+
+        GROUP BY
+            s.RunID,
+            t.Capacity;
+    `;
+
+    const row = result.recordset[0];
+
+    return {
+        runID: row.RunID,
+        capacity: row.Capacity,
+        totalTickets: row.TotalTickets,
+        booked: row.Booked,
+        used: row.Used,
+        cancelled: row.Cancelled,
+        activeTickets: row.ActiveTickets,
+        availableSeats: row.Capacity - row.ActiveTickets
+    };
+}
+
+async function getTicketStatisticsByScheduleID(scheduleID) {
+
+    await sql.connect(config);
+
+    const scheduleCheck = await sql.query`
+        SELECT ScheduleID
+        FROM Schedule
+        WHERE ScheduleID = ${scheduleID}
+    `;
+
+    if (scheduleCheck.recordset.length === 0) {
+        throw new Error("Lịch chạy không tồn tại.");
+    }
+
+    const result = await sql.query`
+        SELECT
+            sc.ScheduleID,
+            sc.RunID,
+            t.TrainID,
+            t.TrainName,
+            t.Capacity,
+
+            COUNT(tk.TicketID) AS TotalTickets,
+
+            SUM(CASE
+                WHEN tk.Status = 'Booked' THEN 1
+                ELSE 0
+            END) AS Booked,
+
+            SUM(CASE
+                WHEN tk.Status = 'Used' THEN 1
+                ELSE 0
+            END) AS Used,
+
+            SUM(CASE
+                WHEN tk.Status = 'Cancelled' THEN 1
+                ELSE 0
+            END) AS Cancelled,
+
+            SUM(CASE
+                WHEN tk.Status IN ('Booked', 'Used') THEN 1
+                ELSE 0
+            END) AS ActiveTickets
+
+        FROM Schedule sc
+
+        INNER JOIN Train t
+            ON sc.TrainID = t.TrainID
+
+        LEFT JOIN Ticket tk
+            ON sc.ScheduleID = tk.ScheduleID
+
+        WHERE sc.ScheduleID = ${scheduleID}
+
+        GROUP BY
+            sc.ScheduleID,
+            sc.RunID,
+            t.TrainID,
+            t.TrainName,
+            t.Capacity;
+    `;
+
+    const row = result.recordset[0];
+
+    return {
+        scheduleID: row.ScheduleID,
+        runID: row.RunID,
+        trainID: row.TrainID,
+        trainName: row.TrainName,
+        capacity: row.Capacity,
+        totalTickets: row.TotalTickets,
+        booked: row.Booked,
+        used: row.Used,
+        cancelled: row.Cancelled,
+        activeTickets: row.ActiveTickets,
+        availableSeats: row.Capacity - row.ActiveTickets
+    };
+}
+
+async function searchTicketsByPassengerName(passengerName) {
+    await sql.connect(config);
+
+    const result = await sql.query`
+        SELECT
+            TicketID,
+            ScheduleID,
+            PassengerName,
+            SeatNumber,
+            Price,
+            Status,
+            CreatedAt
+        FROM Ticket
+        WHERE PassengerName LIKE ${'%' + passengerName + '%'}
+        ORDER BY TicketID;
+    `;
+
+    return result.recordset;
+}
+
+async function getTicketsByStatus(status) {
+    await sql.connect(config);
+
+    const result = await sql.query`
+        SELECT
+            TicketID,
+            ScheduleID,
+            PassengerName,
+            SeatNumber,
+            Price,
+            Status,
+            CreatedAt
+        FROM Ticket
+        WHERE Status = ${status}    
+        ORDER BY TicketID;
+    `;
+
+    return result.recordset;
+}
+
 async function addTicket(
     scheduleID,
     passengerName,
@@ -437,5 +757,12 @@ module.exports = {
     checkSeatAvailable,
     checkTicketStatusChange,
     checkCapacity,
-    checkScheduleCanBook
+    checkScheduleCanBook,
+    getTicketsByRunID,
+    getSeatsByRunID,
+    getTicketsByScheduleID,
+    getTicketStatisticsByRunID,
+    getTicketStatisticsByScheduleID,
+    searchTicketsByPassengerName,
+    getTicketsByStatus
 };

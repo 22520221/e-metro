@@ -62,6 +62,179 @@ function validateNewTicketStatus(status) {
     return null;
 }
 
+async function getTicketsByRunID(req, res) {
+
+    try {
+
+        const runID = Number(req.params.runID);
+
+        if (!Number.isInteger(runID)) {
+            return res.status(400).json({
+                error: "RunID không hợp lệ."
+            });
+        }
+
+        const tickets =
+            await ticketService.getTicketsByRunID(runID);
+
+        res.json(tickets);
+
+    } catch (err) {
+
+        res.status(400).json({
+            error: err.message
+        });
+
+    }
+}
+
+async function getSeatsByRunID(req, res) {
+
+    try {
+
+        const runID = Number(req.params.runID);
+
+        if (!Number.isInteger(runID)) {
+            return res.status(400).json({
+                error: "RunID không hợp lệ."
+            });
+        }
+
+        const result =
+            await ticketService.getSeatsByRunID(runID);
+
+        return res.json(result);
+
+    } catch (err) {
+
+        return res.status(400).json({
+            error: err.message
+        });
+
+    }
+}
+
+async function getTicketsByScheduleID(req, res) {
+
+    try {
+
+        const scheduleID = Number(req.params.scheduleID);
+
+        if (!Number.isInteger(scheduleID)) {
+            return res.status(400).json({
+                error: "ScheduleID không hợp lệ."
+            });
+        }
+
+        const tickets =
+            await ticketService.getTicketsByScheduleID(scheduleID);
+
+        return res.json(tickets);
+
+    } catch (err) {
+
+        return res.status(400).json({
+            error: err.message
+        });
+
+    }
+}
+
+async function getTicketStatisticsByRunID(req, res) {
+    try {
+        const runID = Number(req.params.runID);
+
+        if (!Number.isInteger(runID)) {
+            return res.status(400).json({
+                error: "RunID không hợp lệ."
+            });
+        }
+
+        const statistics =
+            await ticketService.getTicketStatisticsByRunID(runID);
+
+        return res.json(statistics);
+
+    } catch (err) {
+        return res.status(400).json({
+            error: err.message
+        });
+    }
+}
+
+async function getTicketStatisticsByScheduleID(req, res) {
+
+    try {
+
+        const scheduleID = Number(req.params.scheduleID);
+
+        if (!Number.isInteger(scheduleID)) {
+            return res.status(400).json({
+                error: "ScheduleID không hợp lệ."
+            });
+        }
+
+        const statistics =
+            await ticketService.getTicketStatisticsByScheduleID(scheduleID);
+
+        return res.json(statistics);
+
+    } catch (err) {
+
+        return res.status(400).json({
+            error: err.message
+        });
+
+    }
+}
+
+async function searchTicketsByPassengerName(req, res) {
+    try {
+        const { passengerName } = req.query;
+
+        if (!passengerName || passengerName.trim() === "") {
+            return res.status(400).json({
+                error: "Vui lòng nhập tên hành khách."
+            });
+        }
+
+        const tickets =
+            await ticketService.searchTicketsByPassengerName(
+                passengerName.trim()
+            );
+
+        return res.json(tickets);
+
+    } catch (err) {
+        return res.status(500).json({
+            error: err.message
+        });
+    }
+}
+
+async function getTicketsByStatus(req, res) {
+    try {
+        const { status } = req.params;
+
+        const validStatuses = ["Booked", "Used", "Cancelled"];
+
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({
+                error: "Trạng thái vé không hợp lệ."
+            });
+        }
+
+        const tickets = await ticketService.getTicketsByStatus(status);
+
+        return res.json(tickets);
+
+    } catch (err) {
+        return res.status(500).json({
+            error: err.message
+        });
+    }
+}
+
 async function addTicket(req, res) {
     try {
 
@@ -244,5 +417,12 @@ module.exports = {
     getTickets,
     addTicket,
     updateTicket,
-    cancelTicket
+    cancelTicket,
+    getTicketsByRunID,
+    getSeatsByRunID,
+    getTicketsByScheduleID,
+    getTicketStatisticsByRunID,
+    getTicketStatisticsByScheduleID,
+    searchTicketsByPassengerName,
+    getTicketsByStatus
 };

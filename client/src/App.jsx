@@ -9,60 +9,145 @@ import LinePage from "./page/LinePage";
 import SchedulePage from "./page/SchedulePage";
 import TicketPage from "./page/TicketPage";
 import DashboardPage from "./page/DashboardPage";
+import LoginPage from "./page/LoginPage";
 import NotFoundPage from "./page/NotFoundPage";
 
 import Layout from "./layouts/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
+import RoleRoute from "./components/RoleRoute";
+
 
 function App() {
+
     return (
+
         <Routes>
+
+            {/* =========================================
+                LOGIN
+            ========================================= */}
+
+            <Route
+                path="/login"
+                element={<LoginPage />}
+            />
+
+
+            {/* =========================================
+                LAYOUT
+            ========================================= */}
 
             <Route element={<Layout />}>
 
-                <Route
-                    path="/"
-                    element={<HomePage />}
-                />
+                {/* =====================================
+                    LOGIN REQUIRED
+                ===================================== */}
 
-                <Route
-                    path="/dashboard"
-                    element={<DashboardPage />}
-                />
+                <Route element={<ProtectedRoute />}>
 
-                <Route
-                    path="/stations"
-                    element={<StationPage />}
-                />
+                    {/* HOME - TẤT CẢ ROLE */}
+                    <Route
+                        path="/"
+                        element={<HomePage />}
+                    />
 
-                <Route
-                    path="/trains"
-                    element={<TrainPage />}
-                />
 
-                <Route
-                    path="/lines"
-                    element={<LinePage />}
-                />
+                    {/* =================================
+                        ADMIN ONLY
+                    ================================= */}
 
-                <Route
-                    path="/schedules"
-                    element={<SchedulePage />}
-                />
+                    <Route
+                        path="/stations"
+                        element={
+                            <RoleRoute allowedRoles={["Admin"]}>
+                                <StationPage />
+                            </RoleRoute>
+                        }
+                    />
 
-                <Route
-                    path="/tickets"
-                    element={<TicketPage />}
-                />
+                    <Route
+                        path="/trains"
+                        element={
+                            <RoleRoute allowedRoles={["Admin"]}>
+                                <TrainPage />
+                            </RoleRoute>
+                        }
+                    />
 
-                <Route
-                    path="*"
-                    element={<NotFoundPage />}
-                />
+                    <Route
+                        path="/lines"
+                        element={
+                            <RoleRoute allowedRoles={["Admin"]}>
+                                <LinePage />
+                            </RoleRoute>
+                        }
+                    />
+
+
+                    {/* =================================
+                        ADMIN + STAFF
+                    ================================= */}
+
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <RoleRoute
+                                allowedRoles={[
+                                    "Admin",
+                                    "Staff"
+                                ]}
+                            >
+                                <DashboardPage />
+                            </RoleRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/schedules"
+                        element={
+                            <RoleRoute
+                                allowedRoles={[
+                                    "Admin",
+                                    "Staff"
+                                ]}
+                            >
+                                <SchedulePage />
+                            </RoleRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/tickets"
+                        element={
+                            <RoleRoute
+                                allowedRoles={[
+                                    "Admin",
+                                    "Staff"
+                                ]}
+                            >
+                                <TicketPage />
+                            </RoleRoute>
+                        }
+                    />
+
+
+                    {/* =================================
+                        NOT FOUND
+                    ================================= */}
+
+                    <Route
+                        path="*"
+                        element={<NotFoundPage />}
+                    />
+
+                </Route>
 
             </Route>
 
         </Routes>
+
     );
+
 }
 
 export default App;
