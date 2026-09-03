@@ -3,100 +3,42 @@ import { createContext, useContext, useState } from "react";
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
 
-    // =========================================
-    // LOAD USER FROM LOCAL STORAGE
-    // =========================================
-
-    const [user, setUser] = useState(() => {
-
-        const savedUser =
-            localStorage.getItem("metro_user");
-
-        if (!savedUser) {
-            return null;
-        }
-
-        try {
-
-            return JSON.parse(savedUser);
-
-        } catch (error) {
-
-            localStorage.removeItem("metro_user");
-
-            return null;
-
-        }
-
-    });
-
-
-    // =========================================
-    // LOGIN
-    // =========================================
-
-    const login = (userData) => {
-
-        setUser(userData);
-
-        localStorage.setItem(
-            "metro_user",
-            JSON.stringify(userData)
-        );
-
+    const login = (loginData) => {
+        setUser(loginData.user);
+        setToken(loginData.token);
     };
-
-
-    // =========================================
-    // LOGOUT
-    // =========================================
 
     const logout = () => {
-
         setUser(null);
-
-        localStorage.removeItem(
-            "metro_user"
-        );
-
+        setToken(null);
     };
 
+    const isAuthenticated = user !== null && token !== null;
 
-    // =========================================
-    // AUTH STATE
-    // =========================================
-
-    const isAuthenticated =
-        user !== null;
-
+    console.log("AUTH CONTEXT:", {
+    user,
+    token,
+    isAuthenticated
+});
 
     return (
-
         <AuthContext.Provider
             value={{
                 user,
+                token,
                 login,
                 logout,
                 isAuthenticated
             }}
         >
-
             {children}
-
         </AuthContext.Provider>
-
     );
-
 }
 
-
-// =========================================
-// USE AUTH
-// =========================================
-
 export function useAuth() {
-
     return useContext(AuthContext);
-
 }

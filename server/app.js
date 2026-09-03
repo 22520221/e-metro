@@ -1,3 +1,7 @@
+require("dotenv").config();
+
+
+
 const express = require("express");
 const cors = require("cors");
 
@@ -9,6 +13,7 @@ const ticketRoutes = require("./routes/ticketRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
+const { authenticateToken, requireAdmin } = require("./middleware/authMiddleware");
 
 const app = express();
 
@@ -21,8 +26,27 @@ app.use("/api/lines", lineRoutes);
 app.use("/api/schedules", scheduleRoutes);
 app.use("/api/tickets", ticketRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/users", userRoutes);
+
+app.use(
+    "/api/users",
+    authenticateToken,
+    requireAdmin,
+    userRoutes
+);
+
 app.use("/api/auth", authRoutes);
+
+app.get(
+    "/api/auth/me",
+    authenticateToken,
+    (req, res) => {
+
+        res.status(200).json({
+            user: req.user
+        });
+
+    }
+);
 
 app.get("/", (req, res) => {
     res.json({

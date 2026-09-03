@@ -56,9 +56,10 @@ function LoginPage() {
                 password
             );
 
+            console.log("LOGIN DATA:", data);
 
             // Lưu user vào AuthContext
-            login(data.user);
+            login(data);
 
 
             // Đăng nhập thành công

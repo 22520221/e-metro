@@ -11,6 +11,7 @@ import TicketPage from "./page/TicketPage";
 import DashboardPage from "./page/DashboardPage";
 import LoginPage from "./page/LoginPage";
 import NotFoundPage from "./page/NotFoundPage";
+import UserPage from "./page/UserPage";
 
 import Layout from "./layouts/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -126,6 +127,15 @@ function App() {
                                 ]}
                             >
                                 <TicketPage />
+                            </RoleRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/users"
+                        element={
+                            <RoleRoute allowedRoles={["Admin"]}>
+                                <UserPage/>
                             </RoleRoute>
                         }
                     />

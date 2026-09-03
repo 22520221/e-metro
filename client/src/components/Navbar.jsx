@@ -145,6 +145,21 @@ function Navbar() {
 
             </div>
 
+            {user?.Role === "Admin" && (
+
+    <NavLink
+        to="/users"
+        className={({ isActive }) =>
+            isActive
+                ? "navbar-link active"
+                : "navbar-link"
+        }
+    >
+        Users
+    </NavLink>
+
+)}
+
 
             {/* USER INFO */}
 

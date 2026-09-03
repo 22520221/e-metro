@@ -6,6 +6,7 @@ function RoleRoute({ allowedRoles, children }) {
 
     const { user } = useAuth();
 
+    console.log("ROLE ROUTE USER:", user);
 
     // Chưa đăng nhập
     if (!user) {
