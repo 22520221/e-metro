@@ -199,15 +199,140 @@ async function createUser(
     return result.recordset[0];
 }
 
+// =====================================================
+// UPDATE USER
+// =====================================================
+async function updateUser(
+    userId,
+    username,
+    fullName,
+    email,
+    role
+) {
+    // Validate dữ liệu
+    if (
+        typeof username !== "string" ||
+        username.trim() === ""
+    ) {
+        throw new Error(
+            "Tên đăng nhập không được để trống."
+        );
+    }
+
+    if (
+        typeof fullName !== "string" ||
+        fullName.trim() === ""
+    ) {
+        throw new Error(
+            "Họ tên không được để trống."
+        );
+    }
+
+    const validRoles = [
+        "Admin",
+        "Staff",
+        "Customer"
+    ];
+
+    if (!validRoles.includes(role)) {
+        throw new Error(
+            "Role không hợp lệ."
+        );
+    }
+
+    // Kiểm tra username có bị trùng với User khác không
+    await sql.connect(config);
+
+    const conflictResult = await sql.query`
+        SELECT UserID
+        FROM Users
+        WHERE LOWER(LTRIM(RTRIM(Username)))
+            = LOWER(${username.trim()})
+        AND UserID <> ${userId}
+    `;
+
+    if (conflictResult.recordset.length > 0) {
+        throw new Error(
+            "Tên đăng nhập đã tồn tại."
+        );
+    }
+
+    // Cập nhật User
+    const result = await sql.query`
+        UPDATE Users
+        SET
+            Username = ${username.trim()},
+            FullName = ${fullName.trim()},
+            Email = ${email || null},
+            Role = ${role}
+        OUTPUT
+            INSERTED.UserID,
+            INSERTED.Username,
+            INSERTED.FullName,
+            INSERTED.Email,
+            INSERTED.Role,
+            INSERTED.Status,
+            INSERTED.CreatedAt
+        WHERE UserID = ${userId}
+    `;
+
+    if (result.recordset.length === 0) {
+        throw new Error(
+            "Không tìm thấy người dùng."
+        );
+    }
+
+    return result.recordset[0];
+}
+
+// =====================================================
+// UPDATE STATUS USER
+// =====================================================
+async function updateUserStatus(userId, status) {
+    const validStatuses = [
+        "Active",
+        "Inactive"
+    ];
+
+    if (!validStatuses.includes(status)) {
+        throw new Error(
+            "Status không hợp lệ."
+        );
+    }
+
+    await sql.connect(config);
+
+    const result = await sql.query`
+        UPDATE Users
+        SET Status = ${status}
+        OUTPUT
+            INSERTED.UserID,
+            INSERTED.Username,
+            INSERTED.FullName,
+            INSERTED.Email,
+            INSERTED.Role,
+            INSERTED.Status,
+            INSERTED.CreatedAt
+        WHERE UserID = ${userId}
+    `;
+
+    if (result.recordset.length === 0) {
+        throw new Error(
+            "Không tìm thấy người dùng."
+        );
+    }
+
+    return result.recordset[0];
+}
+
 
 module.exports = {
 
     getAllUsers,
-
     createUser,
-
+    updateUser,
     validateUserData,
-
-    checkUsernameConflict
+    checkUsernameConflict,
+    updateUserStatus
 
 };
