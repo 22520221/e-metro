@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUsers, createUser } from "../services/userService";
+import { getUsers, createUser, updateUser, updateUserStatus } from "../services/userService";
 import { useAuth } from "../context/AuthContext";
 
 function UserPage() {
@@ -10,6 +10,8 @@ function UserPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    const [editingId, setEditingId] = useState(null);
+
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [fullName, setFullName] = useState("");
@@ -19,97 +21,120 @@ function UserPage() {
     const [createError, setCreateError] = useState("");
     const [creating, setCreating] = useState(false);
 
-    const handleCreateUser = async (e) => {
+    const loadUsers = async () => {
+    try {
+        setLoading(true);
+        setError("");
 
-        e.preventDefault();
+        const data = await getUsers(token);
 
+        setUsers(data);
+    } catch (err) {
+        setError(
+            err.message ||
+            "Có lỗi xảy ra."
+        );
+    } finally {
+        setLoading(false);
+    }
+};
+
+    const handleToggleStatus = async (user) => {
+        try {
+            setCreating(true);
+            setCreateError("");
+
+            const newStatus =
+                user.Status === "Active"
+                    ? "Inactive"
+                    : "Active";
+
+            await updateUserStatus(
+                user.UserID,
+                newStatus,
+                token
+            );
+
+            alert(
+                newStatus === "Active"
+                    ? "Kích hoạt tài khoản thành công."
+                    : "Vô hiệu hóa tài khoản thành công."
+            );
+
+            await loadUsers();
+        } catch (error) {
+            setCreateError(error.message);
+        } finally {
+            setCreating(false);
+        }
+    };
+
+    const handleEdit = (user) => {
+        setEditingId(user.UserID);
+        setUsername(user.Username);
+        setFullName(user.FullName);
+        setEmail(user.Email || "");
+        setRole(user.Role);
+    };
+
+    const resetForm = () => {
+        setUsername("");
+        setPassword("");
+        setFullName("");
+        setEmail("");
+        setRole("Customer");
+        setEditingId(null);
+    };
+
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+        setCreating(true);
         setCreateError("");
 
-        if (!username.trim()) {
-            setCreateError("Vui lòng nhập tên đăng nhập.");
-            return;
-        }
-
-        if (!password) {
-            setCreateError("Vui lòng nhập mật khẩu.");
-            return;
-        }
-
-        if (!fullName.trim()) {
-            setCreateError("Vui lòng nhập họ tên.");
-            return;
-        }
-
-        try {
-
-            setCreating(true);
-
-            const newUser = await createUser(
-                username.trim(),
+        if (editingId === null) {
+            await createUser(
+                username,
                 password,
-                fullName.trim(),
-                email.trim(),
+                fullName,
+                email,
                 role,
                 token
             );
 
-            setUsers((currentUsers) => [
-                ...currentUsers,
-                newUser
-            ]);
+            alert("Thêm người dùng thành công.");
+            resetForm();
+            await loadUsers();
 
-            setUsername("");
-            setPassword("");
-            setFullName("");
-            setEmail("");
-            setRole("Customer");
-
-        } catch (err) {
-
-            setCreateError(
-                err.message ||
-                "Không thể tạo tài khoản."
+        } else {
+            await updateUser(
+                editingId,
+                username,
+                fullName,
+                email,
+                role,
+                token
             );
 
-        } finally {
+            alert("Cập nhật người dùng thành công.");
 
-            setCreating(false);
-
+            resetForm();
+            await loadUsers();
         }
-    };
+    } catch (error) {
+        setCreateError(error.message);  
+    }
+
+    finally {
+        setCreating(false);
+    }
+};
 
     useEffect(() => {
-
-        const fetchUsers = async () => {
-
-            try {
-
-                setLoading(true);
-                setError("");
-
-                const data = await getUsers(token);
-
-                setUsers(data);
-
-            } catch (err) {
-
-                setError(
-                    err.message ||
-                    "Có lỗi xảy ra."
-                );
-
-            } finally {
-
-                setLoading(false);
-
-            }
-
-        };
-
         if (token) {
-            fetchUsers();
+            loadUsers();
         }
-
     }, [token]);
 
 
@@ -139,7 +164,6 @@ function UserPage() {
 
     }
 
-
     return (
 
         <div>
@@ -152,7 +176,7 @@ function UserPage() {
 
             <h2>Thêm tài khoản</h2>
 
-            <form onSubmit={handleCreateUser}>
+            <form onSubmit={handleSubmit}>
 
                 <div>
                     <label>Tên đăng nhập</label>
@@ -168,21 +192,21 @@ function UserPage() {
                     />
                 </div>
 
+                {editingId === null && (
+                    <div>
+                        <label>Mật khẩu</label>
 
-                <div>
-                    <label>Mật khẩu</label>
-
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) =>
-                            setPassword(e.target.value)
-                        }
-                        placeholder="Nhập mật khẩu"
-                        disabled={creating}
-                    />
-                </div>
-
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) =>
+                                setPassword(e.target.value)
+                            }
+                            placeholder="Nhập mật khẩu"
+                            disabled={creating}
+                        />
+                    </div>
+                )}
 
                 <div>
                     <label>Họ tên</label>
@@ -198,7 +222,6 @@ function UserPage() {
                     />
                 </div>
 
-
                 <div>
                     <label>Email</label>
 
@@ -212,7 +235,6 @@ function UserPage() {
                         disabled={creating}
                     />
                 </div>
-
 
                 <div>
                     <label>Role</label>
@@ -238,22 +260,32 @@ function UserPage() {
                     </select>
                 </div>
 
-
                 {createError && (
                     <p style={{ color: "red" }}>
                         {createError}
                     </p>
                 )}
 
-
                 <button
                     type="submit"
                     disabled={creating}
                 >
                     {creating
-                        ? "Đang tạo..."
-                        : "Thêm tài khoản"}
+                        ? "Đang xử lý..."
+                        : editingId === null
+                            ? "Thêm tài khoản"
+                            : "Cập nhật tài khoản"}
                 </button>
+
+                {editingId !== null && (
+                    <button
+                        type="button"
+                        onClick={resetForm}
+                        disabled={creating}
+                    >
+                        Hủy
+                    </button>
+                )}
 
             </form>
 
@@ -269,6 +301,7 @@ function UserPage() {
                         <th>Role</th>
                         <th>Status</th>
                         <th>Ngày tạo</th>
+                        <th>Hành động</th>
                     </tr>
 
                 </thead>
@@ -295,6 +328,26 @@ function UserPage() {
                                 {new Date(
                                     user.CreatedAt
                                 ).toLocaleString("vi-VN")}
+                            </td>
+
+                            <td>
+                                <button
+                                    type="button"
+                                    onClick={() => handleEdit(user)}
+                                    disabled={creating}
+                                >
+                                    Sửa
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => handleToggleStatus(user)}
+                                    disabled={creating}
+                                >
+                                    {user.Status === "Active"
+                                        ? "Vô hiệu hóa"
+                                        : "Kích hoạt"}
+                                </button>
                             </td>
 
                         </tr>
