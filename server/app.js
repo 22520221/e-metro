@@ -13,19 +13,54 @@ const ticketRoutes = require("./routes/ticketRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
-const { authenticateToken, requireAdmin } = require("./middleware/authMiddleware");
+const { authenticateToken, requireAdmin, requireAdminOrStaff } = require("./middleware/authMiddleware");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/stations", stationRoutes);
-app.use("/api/trains", trainRoutes);
-app.use("/api/lines", lineRoutes);
-app.use("/api/schedules", scheduleRoutes);
-app.use("/api/tickets", ticketRoutes);
-app.use("/api/dashboard", dashboardRoutes);
+app.use(
+    "/api/stations",
+    authenticateToken,
+    requireAdmin,
+    stationRoutes
+);
+
+app.use(
+    "/api/trains",
+    authenticateToken,
+    requireAdmin,
+    trainRoutes
+);
+
+app.use(
+    "/api/lines",
+    authenticateToken,
+    requireAdmin,
+    lineRoutes
+);
+
+app.use(
+    "/api/schedules",
+    authenticateToken,
+    requireAdminOrStaff,
+    scheduleRoutes
+);
+
+app.use(
+    "/api/tickets",
+    authenticateToken,
+    requireAdminOrStaff,
+    ticketRoutes
+);
+
+app.use(
+    "/api/dashboard",
+    authenticateToken,
+    requireAdminOrStaff,
+    dashboardRoutes
+);
 
 app.use(
     "/api/users",

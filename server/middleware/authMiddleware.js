@@ -104,11 +104,40 @@ function requireAdmin(req, res, next) {
 
 }
 
+// =====================================================
+// REQUIRE ADMIN OR STAFF
+// =====================================================
+
+function requireAdminOrStaff(req, res, next) {
+
+    if (!req.user) {
+
+        return res.status(401).json({
+            error: "Chưa đăng nhập."
+        });
+
+    }
+
+    if (
+        req.user.Role !== "Admin" &&
+        req.user.Role !== "Staff"
+    ) {
+
+        return res.status(403).json({
+            error: "Bạn không có quyền thực hiện chức năng này."
+        });
+
+    }
+
+    next();
+
+}
+
 
 module.exports = {
 
     authenticateToken,
-
-    requireAdmin
+    requireAdmin,
+    requireAdminOrStaff
 
 };
