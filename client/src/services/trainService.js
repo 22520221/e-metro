@@ -1,13 +1,11 @@
-const API_URL = "http://localhost:3000/api/trains";
+import apiFetch from "./apiFetch";
 
-async function getTrains() {
-    const response = await fetch(API_URL);
-
-    if (!response.ok) {
-        throw new Error("Không thể lấy danh sách tàu");
-    }
-
-    return await response.json();
+async function getTrains(token) {
+    return apiFetch(
+        "/api/trains",
+        {},
+        token
+    );
 }
 
 async function addTrain(
@@ -15,28 +13,26 @@ async function addTrain(
     capacity,
     company,
     status,
-    lineId
+    lineId,
+    token
 ) {
-    const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
+    return apiFetch(
+        "/api/trains",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                trainName,
+                capacity,
+                company,
+                status,
+                lineId,
+            }),
         },
-        body: JSON.stringify({
-            trainName,
-            capacity,
-            company,
-            status,
-            lineId,
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Thêm tàu thất bại");
-    }
-
-    return await response.json();
+        token
+    );
 }
 
 async function updateTrain(
@@ -45,41 +41,36 @@ async function updateTrain(
     capacity,
     company,
     status,
-    lineId
+    lineId,
+    token
 ) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
+    return apiFetch(
+        `/api/trains/${id}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                trainName,
+                capacity,
+                company,
+                status,
+                lineId,
+            }),
         },
-        body: JSON.stringify({
-            trainName,
-            capacity,
-            company,
-            status,
-            lineId
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Cập nhật tàu thất bại");
-    }
-
-    return await response.json();
+        token
+    );
 }
 
-async function deleteTrain(id) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "DELETE",
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Xóa tàu thất bại");
-    }
-
-    return await response.json();
+async function deleteTrain(id, token) {
+    return apiFetch(
+        `/api/trains/${id}`,
+        {
+            method: "DELETE",
+        },
+        token
+    );
 }
 
 export {

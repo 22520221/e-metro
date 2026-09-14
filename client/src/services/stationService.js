@@ -1,68 +1,68 @@
-const API_URL = "http://localhost:3000/api/stations";
+import apiFetch from "./apiFetch";
 
-async function getStations() {
-    const response = await fetch(API_URL);
-
-    if (!response.ok) {
-        throw new Error("Không thể lấy danh sách ga");
-    }
-
-    return await response.json();
+async function getStations(token) {
+    return apiFetch(
+        "/api/stations",
+        {},
+        token
+    );
 }
 
-async function addStation(stationName, address, lineId) {
-    const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
+async function addStation(
+    stationName,
+    address,
+    lineId,
+    token
+) {
+    return apiFetch(
+        "/api/stations",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                stationName,
+                address,
+                lineId,
+            }),
         },
-        body: JSON.stringify({
-            stationName,
-            address,
-            lineId
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Thêm ga thất bại");
-    }
-
-    return await response.json();
+        token
+    );
 }
 
-async function updateStation(id, stationName, address, lineId) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
+async function updateStation(
+    id,
+    stationName,
+    address,
+    lineId,
+    token
+) {
+    return apiFetch(
+        `/api/stations/${id}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                stationName,
+                address,
+                lineId,
+            }),
         },
-        body: JSON.stringify({
-            stationName,
-            address,
-            lineId
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Cập nhật ga thất bại");
-    }
-
-    return await response.json();
+        token
+    );
 }
 
-async function deleteStation(id) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "DELETE",
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Xóa ga thất bại");
-    }
-
-    return await response.json();
+async function deleteStation(id, token) {
+    return apiFetch(
+        `/api/stations/${id}`,
+        {
+            method: "DELETE",
+        },
+        token
+    );
 }
 
 export {

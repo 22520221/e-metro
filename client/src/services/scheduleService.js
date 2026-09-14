@@ -1,72 +1,76 @@
-const API_URL = "http://localhost:3000/api/schedules";
+import apiFetch from "./apiFetch";
 
-async function getSchedules() {
-    const response = await fetch(API_URL);
-
-    if (!response.ok) {
-        throw new Error("Không thể lấy danh sách lịch");
-    }
-
-    return await response.json();
+async function getSchedules(token) {
+    return apiFetch(
+        "/api/schedules",
+        {},
+        token
+    );
 }
 
-async function addSchedule(trainID, stationID, arrivalTime, departureTime, stopOrder) {
-    const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
+async function addSchedule(
+    trainID,
+    stationID,
+    arrivalTime,
+    departureTime,
+    stopOrder,
+    token
+) {
+    return apiFetch(
+        "/api/schedules",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                trainID,
+                stationID,
+                arrivalTime,
+                departureTime,
+                stopOrder,
+            }),
         },
-        body: JSON.stringify({
-            trainID, 
-            stationID, 
-            arrivalTime, 
-            departureTime, 
-            stopOrder
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Thêm lịch thất bại");
-    }
-
-    return await response.json();
+        token
+    );
 }
 
-async function updateSchedule(id, trainID, stationID, arrivalTime, departureTime, stopOrder) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
+async function updateSchedule(
+    id,
+    trainID,
+    stationID,
+    arrivalTime,
+    departureTime,
+    stopOrder,
+    token
+) {
+    return apiFetch(
+        `/api/schedules/${id}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                trainID,
+                stationID,
+                arrivalTime,
+                departureTime,
+                stopOrder,
+            }),
         },
-        body: JSON.stringify({
-            trainID, 
-            stationID, 
-            arrivalTime, 
-            departureTime, 
-            stopOrder
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Cập nhật lịch thất bại");
-    }
-
-    return await response.json();
+        token
+    );
 }
 
-async function deleteSchedule(id) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "DELETE",
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Xóa lịch thất bại");
-    }
-
-    return await response.json();
+async function deleteSchedule(id, token) {
+    return apiFetch(
+        `/api/schedules/${id}`,
+        {
+            method: "DELETE",
+        },
+        token
+    );
 }
 
 export {

@@ -45,7 +45,14 @@ function authenticateToken(req, res, next) {
 
 
     // 4. Verify token
-
+// NOTE:
+// Hiện tại middleware chỉ kiểm tra chữ ký và thời hạn của JWT.
+// Nếu tài khoản bị chuyển sang Inactive sau khi đăng nhập,
+// JWT cũ vẫn có thể được xác thực cho đến khi hết hạn.
+//
+// TODO:
+// Trong tương lai cần kiểm tra lại Status của User trong database
+// sau khi verify JWT để vô hiệu hóa các token cũ của tài khoản Inactive.
     try {
 
         const decoded =

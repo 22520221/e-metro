@@ -12,10 +12,14 @@ import {
 
 import { getLines } from "../services/lineService";
 
+import { useAuth } from "../context/AuthContext";
+
 function TrainPage(){
 // ==========================
 // 1. State
 // ==========================
+    const { token } = useAuth();
+
     const [trains, setTrains] = useState([]);
     
     const [trainName, setTrainName] = useState("");
@@ -58,7 +62,7 @@ function TrainPage(){
     async function loadTrains() {
     try {
 
-        const data = await getTrains();
+        const data = await getTrains(token);
 
         setTrains(data);
 
@@ -75,7 +79,7 @@ function TrainPage(){
 
     try {
 
-        const data = await getLines();
+        const data = await getLines(token);
 
         setLines(data);
 

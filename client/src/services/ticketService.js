@@ -1,76 +1,81 @@
-const API_URL = "http://localhost:3000/api/tickets";
+import apiFetch from "./apiFetch";
 
-async function getTickets() {
-    const response = await fetch(API_URL);
-
-    if (!response.ok) {
-        throw new Error("Không thể lấy danh sách vé");
-    }
-
-    return await response.json();
+async function getTickets(token) {
+    return apiFetch(
+        "/api/tickets",
+        {},
+        token
+    );
 }
 
-async function addTicket(scheduleID, passengerName, seatNumber, price, status) {
-    const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
+async function addTicket(
+    scheduleID,
+    passengerName,
+    seatNumber,
+    price,
+    status,
+    token
+) {
+    return apiFetch(
+        "/api/tickets",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                scheduleID,
+                passengerName,
+                seatNumber,
+                price,
+                status,
+            }),
         },
-        body: JSON.stringify({
-            scheduleID, 
-            passengerName, 
-            seatNumber, 
-            price, 
-            status
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Thêm vé thất bại");
-    }
-
-    return await response.json();
+        token
+    );
 }
 
-async function updateTicket(id, scheduleID, passengerName, seatNumber, price, status) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
+async function updateTicket(
+    id,
+    scheduleID,
+    passengerName,
+    seatNumber,
+    price,
+    status,
+    token
+) {
+    return apiFetch(
+        `/api/tickets/${id}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                scheduleID,
+                passengerName,
+                seatNumber,
+                price,
+                status,
+            }),
         },
-        body: JSON.stringify({
-            scheduleID, 
-            passengerName, 
-            seatNumber, 
-            price, 
-            status
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Cập nhật vé thất bại");
-    }
-
-    return await response.json();
+        token
+    );
 }
 
-async function cancelTicket(id) { 
-    const response = await fetch( `${API_URL}/${id}/cancel`, { 
-        method: "PUT", } ); 
-
-        if (!response.ok) { 
-            const error = await response.json(); 
-            throw new Error( error.error || "Hủy vé thất bại" ); 
-        }
-
-        return await response.json(); 
+async function cancelTicket(id, token) {
+    return apiFetch(
+        `/api/tickets/${id}/cancel`,
+        {
+            method: "PUT",
+        },
+        token
+    );
 }
 
 export {
     getTickets,
     addTicket,
     updateTicket,
-    cancelTicket
-}
+    cancelTicket,
+};

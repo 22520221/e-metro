@@ -12,11 +12,14 @@ import {
 
 import { getSchedules } from "../services/scheduleService";
 
+import { useAuth } from "../context/AuthContext";
+
 function TicketPage() {
 
     // ==========================
     // 1. State
     // ==========================
+    const { token } = useAuth();
 
     const [tickets, setTickets] = useState([]);
     const [schedules, setSchedules] = useState([]);
@@ -57,7 +60,7 @@ function TicketPage() {
 
         try {
 
-            const data = await getTickets();
+            const data = await getTickets(token);
 
             setTickets(data);
 
@@ -79,7 +82,7 @@ function TicketPage() {
 
         try {
 
-            const data = await getSchedules();
+            const data = await getSchedules(token);
 
             setSchedules(data);
 

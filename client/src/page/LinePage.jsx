@@ -9,6 +9,8 @@ import { getLines,
         deleteLine
  } from "../services/lineService";
 
+ import { useAuth } from "../context/AuthContext";
+
  import "../styles/LinePage.css";
 
 function LinePage() {
@@ -16,6 +18,7 @@ function LinePage() {
 // ==========================
 // 1. State
 // ==========================
+const { token } = useAuth();
 
 const [lines, setLines] = useState([]);
 const [lineName, setLineName] = useState("");
@@ -48,7 +51,7 @@ const [error, setError] = useState("");
 
     try {
 
-        const data = await getLines();
+        const data = await getLines(token);
 
         setLines(data);
 

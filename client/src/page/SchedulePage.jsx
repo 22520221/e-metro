@@ -14,10 +14,14 @@ import { getTrains } from "../services/trainService";
 
 import { getStations } from "../services/stationService";
 
+import { useAuth } from "../context/AuthContext";
+
 function SchedulePage(){
 // ==========================
 // 1. State
 // ==========================
+    const { token } = useAuth();
+
     const [trains, setTrains] = useState([]);
 
     const [schedules, setSchedules] = useState([]);
@@ -39,7 +43,7 @@ function SchedulePage(){
     const [isLoading, setIsLoading] = useState(false);
     
     const [error, setError] = useState("");
-
+    
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOrder, setSortOrder] = useState("asc");
 
@@ -66,7 +70,7 @@ function SchedulePage(){
     async function loadSchedules() {
     try {
 
-        const data = await getSchedules();
+        const data = await getSchedules(token);
 
         setSchedules(data);
 
@@ -83,7 +87,7 @@ function SchedulePage(){
 
     try {
 
-        const data = await getTrains();
+        const data = await getTrains(token);
 
         setTrains(data);
 
@@ -99,7 +103,7 @@ async function loadStations() {
 
     try {
 
-        const data = await getStations();
+        const data = await getStations(token);
 
         setStations(data);
 

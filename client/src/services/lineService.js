@@ -1,66 +1,64 @@
-const API_URL = "http://localhost:3000/api/lines";
+import apiFetch from "./apiFetch";
 
-async function getLines() {
-    const response = await fetch(API_URL);
-
-    if (!response.ok) {
-        throw new Error("Không thể lấy danh sách tuyến");
-    }
-
-    return await response.json();
+async function getLines(token) {
+    return apiFetch(
+        "/api/lines",
+        {},
+        token
+    );
 }
 
-async function addLine(LineName, LineColor) {
-    const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
+async function addLine(
+    LineName,
+    LineColor,
+    token
+) {
+    return apiFetch(
+        "/api/lines",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                lineName: LineName,
+                lineColor: LineColor,
+            }),
         },
-        body: JSON.stringify({
-            lineName: LineName,
-            lineColor: LineColor
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Thêm tuyến thất bại");
-    }
-
-    return await response.json();
+        token
+    );
 }
 
-async function updateLine(id, LineName, LineColor) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
+async function updateLine(
+    id,
+    LineName,
+    LineColor,
+    token
+) {
+    return apiFetch(
+        `/api/lines/${id}`,
+        {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                lineName: LineName,
+                lineColor: LineColor,
+            }),
         },
-        body: JSON.stringify({
-            lineName: LineName,
-            lineColor: LineColor,
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Cập nhật tuyến thất bại");
-    }
-
-    return await response.json();
+        token
+    );
 }
 
-async function deleteLine(id) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "DELETE",
-    });
-
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Xóa tuyến thất bại");
-    }
-
-    return await response.json();
+async function deleteLine(id, token) {
+    return apiFetch(
+        `/api/lines/${id}`,
+        {
+            method: "DELETE",
+        },
+        token
+    );
 }
 
 export {

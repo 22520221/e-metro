@@ -10,14 +10,16 @@ import {
     deleteStation
 } from "../services/stationService";
 
+import { useAuth } from "../context/AuthContext";
+
 import { getLines } from "../services/lineService";
 import "../styles/common.css";
-
 
 function Stationpage(){
 // ==========================
 // 1. State
 // ==========================
+const { token } = useAuth();
 
 const [stations, setStations] = useState([]);
 const [stationName, setStationName] = useState("");
@@ -57,7 +59,7 @@ const [error, setError] = useState("");
 
         try {
 
-            const data = await getStations();
+            const data = await getStations(token);
 
             setStations(data);
 
@@ -75,7 +77,7 @@ const [error, setError] = useState("");
 
     try {
 
-        const data = await getLines();
+        const data = await getLines(token);
 
         setLines(data);
 

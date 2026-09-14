@@ -7,6 +7,8 @@ import {
     getRevenueByDate
 } from "../services/dashboardService";
 
+import { useAuth } from "../context/AuthContext";
+
 import TicketStatusChart from "../components/TicketStatusChart";
 
 import {
@@ -26,6 +28,7 @@ function DashboardPage() {
     // ==========================
     // 1. State
     // ==========================
+    const { token } = useAuth();
 
     const [stats, setStats] = useState(null);
 
@@ -62,22 +65,22 @@ function DashboardPage() {
 
         try {
 
-            const data = await getDashboardStats();
+            const data = await getDashboardStats(token);
 
             setStats(data);
 
 
-            const ticketData = await getTicketStats();
+            const ticketData = await getTicketStats(token);
 
             setTicketStats(ticketData);
 
 
-            const revenueData = await getRevenue();
+            const revenueData = await getRevenue(token);
 
             setRevenue(revenueData.TotalRevenue);
 
 
-            const revenueByDateData = await getRevenueByDate();
+            const revenueByDateData = await getRevenueByDate(token);
 
             setRevenueByDate(revenueByDateData);
 
